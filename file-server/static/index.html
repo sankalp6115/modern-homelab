@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NASterpiece</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/style.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+  </head>
+  <body class="brutal-theme">
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+      <div class="login-box">
+        <div class="logo" style="margin-bottom: 20px; justify-content: center">
+          <i data-lucide="cloud"></i>
+          <span>NASterpiece</span>
+        </div>
+        <h2 id="auth-title">Login</h2>
+        <div class="input-group">
+          <input type="text" id="login-username" placeholder="Username" />
+        </div>
+        <div class="input-group">
+          <input type="password" id="login-password" placeholder="Password" />
+        </div>
+        <button
+          id="auth-btn"
+          class="btn-primary"
+          style="width: 100%; justify-content: center"
+          onclick="handleAuth()"
+        >
+          Login
+        </button>
+        <div class="toggle-auth" onclick="toggleAuthMode()">
+          Don't have an account? Register here
+        </div>
+      </div>
+    </div>
+
+    <div class="app-container" id="app-container" style="display: none">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div
+          class="sidebar-header"
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+          "
+        >
+          <div class="logo">
+            <i data-lucide="cloud"></i>
+            <span>NASterpiece</span>
+          </div>
+          <button
+            class="btn-icon mobile-only"
+            onclick="toggleSidebar()"
+            style="border: 2px solid #000; box-shadow: 2px 2px 0 #000"
+          >
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-group-label">Explorer</div>
+          <div class="nav-item active" onclick="navigateTo('')">
+            <i data-lucide="folder"></i>
+            <span>All Files</span>
+          </div>
+        </nav>
+        <div class="sidebar-footer">
+          <button
+            class="btn-ghost"
+            onclick="logout()"
+            style="
+              border: none;
+              background: #fff;
+              font-weight: 800;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            "
+          >
+            <i data-lucide="log-out"></i> Logout
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content" id="drop-target">
+        <!-- Hero Section -->
+        <section class="hero-section">
+          <div class="hero-content">
+            <h1>My Personal Cloud</h1>
+            <p id="folder-stats">Access and manage your digital assets.</p>
+          </div>
+          <div class="hero-actions">
+            <button
+              class="btn-icon mobile-only"
+              onclick="toggleSidebar()"
+              style="
+                margin-right: 10px;
+                border: 2px solid #000;
+                box-shadow: 2px 2px 0 #000;
+              "
+            >
+              <i data-lucide="menu"></i>
+            </button>
+            <div class="search-container">
+              <i data-lucide="search"></i>
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Search..."
+                oninput="handleSearch()"
+              />
+            </div>
+            <button class="btn-primary" onclick="triggerUpload()">
+              <i data-lucide="plus"></i>
+              <span>Upload</span>
+            </button>
+          </div>
+        </section>
+
+        <div class="explorer-container">
+          <header class="explorer-header">
+            <div class="breadcrumb" id="breadcrumb"></div>
+            <div class="view-controls">
+              <button class="btn-icon" id="view-grid" onclick="setView('grid')">
+                <i data-lucide="layout-grid"></i>
+              </button>
+              <button class="btn-icon" id="view-list" onclick="setView('list')">
+                <i data-lucide="list"></i>
+              </button>
+              <button
+                class="btn-icon"
+                onclick="showCreateFolder()"
+                title="New Folder"
+              >
+                <i data-lucide="folder-plus"></i>
+              </button>
+            </div>
+          </header>
+
+          <div
+            class="toolbar"
+            id="selection-actions"
+            style="display: none;"
+          >
+            <div class="selection-info">
+              <span id="selected-count" style="font-weight: 800"
+                >0 items selected</span
+              >
+            </div>
+            <div class="selection-buttons">
+              <button class="btn-action" onclick="downloadSelected()">
+                <i data-lucide="download"></i>
+              </button>
+              <button class="btn-action" onclick="copySelected()">
+                <i data-lucide="copy"></i>
+              </button>
+              <button class="btn-action" onclick="cutSelected()">
+                <i data-lucide="scissors"></i>
+              </button>
+              <button class="btn-action" onclick="deleteSelected()" style="background: var(--danger);">
+                <i data-lucide="trash-2"></i>
+              </button>
+              <button
+                class="btn-primary"
+                id="paste-btn"
+                onclick="pasteItems()"
+                style="display: none;"
+              >
+                Paste
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="file-view grid"
+            id="file-view"
+            oncontextmenu="showContextMenu(event, null)"
+          >
+            <!-- Files loaded here -->
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay"></div>
+
+    <div id="mkdir-modal" class="modal">
+      <div class="modal-header">
+        <h3>New Folder</h3>
+        <button class="btn-icon" onclick="closeModals()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input
+          type="text"
+          id="new-folder-name"
+          class="login-box input"
+          style="width: 100%"
+          placeholder="Folder name..."
+        />
+      </div>
+      <div class="modal-footer">
+        <button
+          class="btn-primary"
+          style="background: #fff"
+          onclick="closeModals()"
+        >
+          Cancel
+        </button>
+        <button class="btn-primary" onclick="createFolder()">Create</button>
+      </div>
+    </div>
+
+    <div id="rename-modal" class="modal">
+      <div class="modal-header">
+        <h3>Rename</h3>
+        <button class="btn-icon" onclick="closeModals()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input
+          type="text"
+          id="rename-input"
+          class="login-box input"
+          style="width: 100%"
+          placeholder="New name..."
+        />
+      </div>
+      <div class="modal-footer">
+        <button
+          class="btn-primary"
+          style="background: #fff"
+          onclick="closeModals()"
+        >
+          Cancel
+        </button>
+        <button class="btn-primary" onclick="renameItem()">Rename</button>
+      </div>
+    </div>
+
+    <div id="preview-modal" class="preview-modal">
+      <div class="preview-header">
+        <div class="preview-title"><span id="preview-filename">File</span></div>
+        <button class="btn-icon" onclick="closePreview()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="preview-body-container">
+        <button class="nav-btn prev" id="prev-btn" onclick="prevImage()">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <div class="preview-body" id="preview-body"></div>
+        <button class="nav-btn next" id="next-btn" onclick="nextImage()">
+          <i data-lucide="chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="context-menu" class="context-menu" style="display: none">
+      <div class="menu-item" onclick="handleMenuAction('open')">
+        <i data-lucide="external-link"></i> Open
+      </div>
+      <div class="menu-item" onclick="handleMenuAction('download')">
+        <i data-lucide="download"></i> Download
+      </div>
+      <div class="menu-item" onclick="handleMenuAction('copy')">
+        <i data-lucide="copy"></i> Copy
+      </div>
+      <div class="menu-item" onclick="handleMenuAction('cut')">
+        <i data-lucide="scissors"></i> Cut
+      </div>
+      <div
+        class="menu-item"
+        id="menu-paste"
+        onclick="handleMenuAction('paste')"
+        style="display: none"
+      >
+        <i data-lucide="clipboard"></i> Paste
+      </div>
+      <div class="menu-item" onclick="handleMenuAction('rename')">
+        <i data-lucide="edit-3"></i> Rename
+      </div>
+      <div class="menu-item danger" onclick="handleMenuAction('delete')">
+        <i data-lucide="trash-2"></i> Delete
+      </div>
+    </div>
+
+    <input
+      type="file"
+      id="file-input"
+      multiple
+      style="display: none"
+      onchange="handleFileUpload(event)"
+    />
+    <div
+      id="notification-container"
+      class="notification-container"
+      style="position: fixed; top: 20px; right: 20px; z-index: 9999"
+    ></div>
+
+    <div id="upload-progress" class="upload-progress" style="display: none">
+      <div class="progress-header">
+        <span id="progress-status">Uploading...</span>
+        <span id="progress-percent">0%</span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+      </div>
+      <div class="progress-info" id="progress-files">0 / 0 files</div>
+    </div>
+
+    <script src="/static/app.js"></script>
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

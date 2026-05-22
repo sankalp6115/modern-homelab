@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Keybinder Pro | Remote Gaming (WebRTC)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #6366f1;
+        --secondary: #a855f7;
+        --bg: #0f172a;
+        --glass: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      body {
+        background: var(--bg);
+        color: white;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        overflow: hidden;
+        background: radial-gradient(circle at top left, #1e1b4b, #0f172a);
+      }
+
+      .header {
+        width: 100%;
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--glass-border);
+        z-index: 10;
+      }
+
+      h1 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin-right: 6px;
+        background: #ef4444;
+        box-shadow: 0 0 8px #ef4444;
+      }
+
+      .connected .status-dot {
+        background: #22c55e;
+        box-shadow: 0 0 8px #22c55e;
+      }
+
+      .viewport-container {
+        flex: 1;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        padding: 1rem;
+        overflow: hidden;
+      }
+
+      #remoteVideo {
+        max-width: 100%;
+        max-height: 100%;
+        background: #000;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        cursor: crosshair;
+        border-radius: 8px;
+        object-fit: contain;
+      }
+
+      .overlay {
+        position: absolute;
+        bottom: 2rem;
+        right: 2rem;
+        padding: 1rem;
+        background: var(--glass);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        pointer-events: none;
+      }
+
+      .key-info {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+      }
+
+      .controls {
+        display: flex;
+        gap: 1rem;
+      }
+
+      button {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+
+      button:hover {
+        opacity: 0.9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>
+        Keybinder Pro
+        <span style="font-size: 0.7rem; opacity: 0.6">WEBRTC</span>
+      </h1>
+      <div class="controls">
+        <button onclick="toggleFullscreen()">Fullscreen</button>
+        <div id="statusBadge" class="status-badge">
+          <div class="status-dot"></div>
+          <span id="statusText">Connecting...</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="viewport-container" id="viewport">
+      <video id="remoteVideo" autoplay playsinline muted></video>
+
+      <div class="overlay" id="overlay">
+        <div id="keyDisplay" class="key-info">READY</div>
+      </div>
+    </div>
+
+    <script>
+      const statusBadge = document.getElementById("statusBadge");
+      const statusText = document.getElementById("statusText");
+      const video = document.getElementById("remoteVideo");
+      const keyDisplay = document.getElementById("keyDisplay");
+      const viewport = document.getElementById("viewport");
+
+      let socket = null;
+      let pc = null;
+      let dataChannel = null;
+
+      function connect() {
+        const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+        const host = "10.34.90.226";
+        const wsUrl = `${protocol}//${host}:8000/ws`;
+
+        socket = new WebSocket(wsUrl);
+
+        socket.onopen = async () => {
+          console.log("Signaling channel connected");
+          startWebRTC();
+        };
+
+        socket.onmessage = async (event) => {
+          const message = JSON.parse(event.data);
+          if (message.type === "answer") {
+            console.log("Received SDP Answer");
+            await pc.setRemoteDescription(new RTCSessionDescription(message));
+          }
+        };
+
+        socket.onclose = () => {
+          statusBadge.classList.remove("connected");
+          statusText.textContent = "Disconnected";
+          setTimeout(connect, 3000);
+        };
+      }
+
+      async function startWebRTC() {
+        pc = new RTCPeerConnection({
+          iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+        });
+
+        // CRITICAL: Tell the server we want to RECEIVE video
+        pc.addTransceiver("video", { direction: "recvonly" });
+
+        // Setup Data Channel for input
+        dataChannel = pc.createDataChannel("input");
+        dataChannel.onopen = () => console.log("DataChannel open");
+
+        // Handle incoming video track
+        pc.ontrack = (event) => {
+          console.log("Received remote track:", event.track.kind);
+
+          if (event.streams && event.streams[0]) {
+            video.srcObject = event.streams[0];
+          } else {
+            // Fallback for browsers that don't provide streams array
+            console.log("Creating new MediaStream for track");
+            video.srcObject = new MediaStream([event.track]);
+          }
+
+          statusBadge.classList.add("connected");
+          statusText.textContent = "Live";
+
+          video.play().catch((e) => console.log("Auto-play blocked:", e));
+        };
+
+        // Negotiation
+        pc.onicecandidate = (event) => {
+          if (!event.candidate) {
+            // ICE gathering complete, send offer
+            console.log("ICE gathering complete, sending offer");
+            sendSignaling({
+              type: "offer",
+              sdp: pc.localDescription.sdp,
+            });
+          }
+        };
+
+        // Create offer
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+      }
+
+      function sendSignaling(data) {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+          socket.send(JSON.stringify(data));
+        }
+      }
+
+      function sendInput(data) {
+        if (dataChannel && dataChannel.readyState === "open") {
+          dataChannel.send(JSON.stringify(data));
+        } else {
+          sendSignaling(data); // Fallback to WebSocket
+        }
+      }
+
+      // Keyboard
+      document.addEventListener("keydown", (e) => {
+        if (e.repeat) return;
+        keyDisplay.textContent = e.code.replace("Key", "");
+        sendInput({ action: "keydown", key: e.code });
+        if (
+          [
+            "Space",
+            "Tab",
+            "ArrowUp",
+            "ArrowDown",
+            "ArrowLeft",
+            "ArrowRight",
+          ].includes(e.code)
+        ) {
+          e.preventDefault();
+        }
+      });
+
+      document.addEventListener("keyup", (e) => {
+        sendInput({ action: "keyup", key: e.code });
+      });
+
+      // Mouse
+      function getMousePos(e) {
+        const rect = video.getBoundingClientRect();
+        // Since we don't have host dims immediately, we can use video element dimensions
+        // or wait for the info message. For WebRTC, video.videoWidth is available once loaded.
+        const scaleX = video.videoWidth / rect.width;
+        const scaleY = video.videoHeight / rect.height;
+        return {
+          x: (e.clientX - rect.left) * scaleX,
+          y: (e.clientY - rect.top) * scaleY,
+        };
+      }
+
+      let lastMouseMove = 0;
+      video.addEventListener("mousemove", (e) => {
+        const now = Date.now();
+        if (now - lastMouseMove < 10) return; // ~100Hz
+        lastMouseMove = now;
+        const pos = getMousePos(e);
+        sendInput({ action: "mousemove", x: pos.x, y: pos.y });
+      });
+
+      video.addEventListener("mousedown", (e) => {
+        sendInput({ action: "mousedown", button: e.button });
+      });
+
+      video.addEventListener("mouseup", (e) => {
+        sendInput({ action: "mouseup", button: e.button });
+      });
+
+      video.addEventListener(
+        "wheel",
+        (e) => {
+          sendInput({ action: "scroll", delta: e.deltaY > 0 ? -1 : 1 });
+          e.preventDefault();
+        },
+        { passive: false },
+      );
+
+      video.addEventListener("contextmenu", (e) => e.preventDefault());
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          viewport.requestFullscreen();
+        } else {
+          document.exitFullscreen();
+        }
+      }
+
+      connect();
+    </script>
+  </body>
+</html>
