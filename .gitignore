@@ -2,13 +2,13 @@ __pycache__
 node_modules
 .vscode
 .directorymap
-keybinder v1
-file-server-legacy
+
 downloads/*
 !downloads/.gitkeep
+
 storage/*
 !storage/.gitkeep
-package-lock.json
+
 .DS_Store
 certs
 venv
