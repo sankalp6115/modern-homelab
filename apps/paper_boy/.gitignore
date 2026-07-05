@@ -1,0 +1,17 @@
+# Ignore all media files inside assets folders
+static/assets/video/*
+!static/assets/video/.gitkeep
+
+static/assets/image/*
+!static/assets/image/.gitkeep
+
+static/assets/audio/*
+!static/assets/audio/.gitkeep
+
+static/assets/overlay/*
+!static/assets/overlay/.gitkeep
+
+# Python cache
+__pycache__/
+*.pyc
+.DS_Store

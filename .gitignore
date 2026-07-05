@@ -11,3 +11,8 @@ storage/*
 package-lock.json
 .DS_Store
 certs
+venv
+4.2.3
+frontend-sep
+archive
+dist

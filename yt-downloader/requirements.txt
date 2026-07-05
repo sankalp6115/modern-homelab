@@ -1,7 +1,0 @@
-fastapi
-uvicorn
-yt-dlp
-jinja2
-python-multipart
-pydantic
-aiofiles

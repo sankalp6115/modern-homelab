@@ -1,0 +1,261 @@
+.home-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ── Hero Background ────────────────────────────────────────────── */
+.home-hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+  opacity: 0.9;
+}
+
+.home-content {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.home-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.show-all {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  cursor: pointer;
+  margin-left: 20px;
+  padding-bottom: 5px;
+}
+
+/* ── Playlists Grid ─────────────────────────────────────────────── */
+.playlists-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.playlist-card {
+  position: relative;
+  width: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.playlist-card:hover {
+  transform: translateY(-5px);
+}
+
+.playlist-poster {
+  width: 100%;
+  aspect-ratio: 1;
+  position: relative;
+}
+
+.playlist-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.playlist-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+}
+
+.playlist-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: white;
+}
+
+.playPauseBtn {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+.playlist-card:hover .playPauseBtn {
+  opacity: 1;
+}
+
+.playPauseBtn img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+}
+
+.playPauseBtn:hover {
+  transform: scale(1.1);
+}
+
+/* ── Artists Row ────────────────────────────────────────────────── */
+.artists-row {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.artist-circle-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.artist-circle-card:hover {
+  transform: scale(1.05);
+}
+
+.artist-poster {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.artist-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.artist-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #eee;
+}
+
+/* ── Genres Flex ────────────────────────────────────────────────── */
+.genres-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.genre-chip {
+  padding: 18px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  color: #111;
+  flex-grow: 1;
+  min-width: 120px;
+  text-align: center;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.genre-chip:hover {
+  filter: brightness(1.2);
+  transform: translateY(-2px);
+}
+
+/* ── Create Playlist Button ── */
+.create-playlist-btn {
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgb(0, 255, 21);
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.create-playlist-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.create-playlist-btn:active {
+  transform: translateY(0);
+}
+
+
+
+/* ── Modal Drag & Drop Zone ── */
+.modal-dropzone {
+  height: 100px;
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  gap: 12px;
+  padding: 12px;
+}
+
+.modal-dropzone:hover,
+.modal-dropzone.dragover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+}
+
+.modal-dropzone img.preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.modal-dropzone-content {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.modal-dropzone-content span {
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 6px;
+  opacity: 0.6;
+}

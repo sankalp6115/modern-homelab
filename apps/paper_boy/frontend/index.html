@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light only">
+    <title>Paper-boy</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: 'Outfit', system-ui, sans-serif;
+            background-color: #050510;
+        }
+
+        .clock {
+            position: fixed;
+            top: 10%;
+            left: 5%;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            color: rgba(255, 255, 255, 0.95);
+            z-index: 10;
+            pointer-events: none;
+            padding: 10px;
+        }
+
+        .clock .time {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 0.9;
+            letter-spacing: -1px;
+
+        }
+
+        .clock .day {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        .clock .date {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            opacity: 0.85;
+        }
+
+        .clock .weather {
+            font-size: 1.3rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-top: 10px;
+            opacity: 0.85;
+        }
+
+        #overlay_img {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: 10;
+            transition: opacity 1s ease-in-out;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        video,
+        img#image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -1;
+            transition: 1s ease-in-out;
+        }
+
+        img#image {
+            display: none;
+            top: -200%;
+        }
+
+        span.bead {
+            height: 10px;
+            width: 10px;
+            animation: bead 1s infinite alternate;
+            border-radius: 50%;
+        }
+
+        @keyframes bead {
+            from {
+                background-color: transparent;
+            }
+
+            to {
+                background-color: red;
+            }
+        }
+
+        .players {
+            position: fixed;
+            right: 10px;
+            bottom: 10px;
+            background-color: white;
+            padding: 5px;
+            border: 4px;
+            z-index: 99999;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="clock">
+        <div class="time"></div>
+        <div class="day"></div>
+        <div class="date"></div>
+        <div class="weather"></div>
+    </div>
+    <div id="overlay"><img src="" id="overlay_img" alt="overlay"></div>
+    <video id="video" playsinline muted autoplay loop></video>
+    <img id="image" alt="Background image">
+    <audio id="audio" playinline autoplay loop></audio>
+    <div class="players">
+        <span class="bead"></span>
+        0 Live
+    </div>
+</body>
+
+<script>
+    // clock
+    const clock = document.querySelector(".clock");
+    const time_box = document.querySelector(".time")
+    const day_box = document.querySelector(".day")
+    const date_box = document.querySelector(".date")
+    const Days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
+
+    function clockSet() {
+        let now = new Date;
+        const date = now.getDate();
+        const year = now.getFullYear();
+        const month = now.getMonth();
+        const day = now.getDay();
+
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+
+        const pad = (num) => String(num).padStart(2, '0');
+        time_box.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+        date_box.textContent = `${year}-${pad(month + 1)}-${pad(date)}`
+        day_box.textContent = `${Days[day]}`
+    }
+
+    setInterval(clockSet, 1000)
+
+    // Weather System
+    const weather_box = document.querySelector(".weather");
+    const WMO_CODES = {
+        0: 'Clear', 1: 'Mainly Clear', 2: 'Partly Cloudy', 3: 'Cloudy',
+        45: 'Fog', 48: 'Fog', 51: 'Drizzle', 53: 'Drizzle', 55: 'Drizzle',
+        56: 'Freezing Drizzle', 57: 'Freezing Drizzle', 61: 'Rain', 63: 'Rain', 65: 'Rain',
+        66: 'Freezing Rain', 67: 'Freezing Rain', 71: 'Snow', 73: 'Snow', 75: 'Snow',
+        77: 'Snow Grains', 80: 'Showers', 81: 'Showers', 82: 'Showers',
+        85: 'Snow Showers', 86: 'Snow Showers', 95: 'Thunderstorm', 96: 'Thunderstorm', 99: 'Thunderstorm'
+    };
+
+    async function fetchWeather() {
+        try {
+            // Fetch for Kanpur (Latitude: 26.4499, Longitude: 80.3319)
+            const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=26.4499&longitude=80.3319&current_weather=true");
+            const data = await res.json();
+            const temp = Math.round(data.current_weather.temperature);
+            const code = data.current_weather.weathercode;
+            const desc = WMO_CODES[code] || 'Unknown';
+
+            weather_box.textContent = `${temp}°C ${desc}`;
+        } catch (e) {
+            console.error("Weather fetch failed", e);
+            weather_box.textContent = "";
+        }
+    }
+
+    fetchWeather();
+    setInterval(fetchWeather, 2 * 60 * 60 * 1000);
+    const video = document.getElementById("video");
+    const image = document.getElementById("image");
+    const players = document.querySelector(".players");
+    const overlay = document.getElementById("overlay")
+    const overlay_img = document.getElementById("overlay_img");
+    const audio = document.getElementById("audio");
+
+    let ws;
+    function connect() {
+        ws = new WebSocket("ws://" + location.host + "/ws/player");
+        ws.onopen = () => {
+            console.log("Connected")
+        }
+        ws.onmessage = (event) => {
+            handleMessage(event);
+        }
+        ws.onclose = () => {
+            console.log("Socket closed");
+            setTimeout(connect, 2000);
+        }
+        ws.onerror = () => {
+            ws.close();
+        }
+    }
+    connect();
+    setInterval(() => {
+        if (ws && ws.readyState === 1) {
+            ws.send(JSON.stringify({ type: "ping" }));
+        }
+    }, 15000);
+
+    // Initialize from LocalStorage
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedColor = localStorage.getItem('displayColor');
+        if (savedColor) {
+            document.querySelector('.clock').style.color = savedColor;
+        }
+        const savedMedia = localStorage.getItem('displayMedia');
+        if (savedMedia) {
+            try {
+                handleMessage({ data: JSON.stringify({ type: "switch_video", video: savedMedia }) });
+            } catch (e) {
+                console.error("Failed to load saved media", e);
+            }
+        }
+    });
+
+    const handleMessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log(data)
+        if (data.type == "stats") {
+            players.innerHTML = `<span class="bead"></span> ${data.players} Live`
+        }
+        if (data.type == "switch_video") {
+            localStorage.setItem('displayMedia', data.video);
+            const ext = data.video.split('.').pop().toLowerCase();
+            const isVideo = ['mp4', 'webm', 'ogg', 'mov'].includes(ext);
+            const newSrc = (isVideo ? "/assets/video/" : "/assets/image/") + data.video;
+            if (isVideo) {
+                image.style.top = "200%";
+                setTimeout(() => { image.style.display = "none"; }, 500);
+                video.style.display = "block";
+                video.style.top = "200%";
+
+                setTimeout(() => {
+                    video.src = newSrc;
+                    video.play();
+                    video.oncanplay = () => {
+                        video.style.top = "0%";
+                        video.oncanplay = null;
+                    }
+                }, 500);
+            } else {
+                video.style.top = "200%";
+                setTimeout(() => { video.style.display = "none"; }, 500);
+                image.style.display = "block";
+                image.style.top = "200%";
+                setTimeout(() => {
+                    image.src = newSrc;
+                    image.onload = () => {
+                        image.style.top = "0%";
+                        image.onload = null;
+                    }
+                }, 500);
+            }
+        }
+        if (data.type == "switch_audio") {
+            if (data.file === "STOP") {
+                audio.pause();
+                audio.src = "";
+            } else {
+                const newSrc = "/assets/audio/" + data.file;
+                console.log("Playing audio:", newSrc)
+                audio.src = newSrc;
+
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(err => {
+                        console.error("Autoplay blocked by browser:", err);
+                        let unlockBtn = document.getElementById("audio-unlock");
+                        if (!unlockBtn) {
+                            unlockBtn = document.createElement("div");
+                            unlockBtn.id = "audio-unlock";
+                            unlockBtn.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(218, 119, 86, 0.9);color:white;padding:20px 40px;border-radius:12px;font-size:24px;font-weight:600;z-index:999999;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,0.5);";
+                            unlockBtn.innerText = "Click anywhere to enable Audio 🔊";
+                            unlockBtn.onclick = () => {
+                                audio.play();
+                                unlockBtn.remove();
+                            };
+                            document.body.appendChild(unlockBtn);
+                        }
+                    });
+                }
+
+                audio.oncanplay = () => {
+                    audio.oncanplay = null;
+                }
+            }
+        }
+        if (data.type == "switch_overlay") {
+            if (data.file === "STOP") {
+                overlay_img.style.opacity = "0";
+            } else {
+                const newSrc = "/assets/overlay/" + data.file;
+                console.log(newSrc)
+                overlay_img.style.opacity = "0";
+                setTimeout(() => {
+                    overlay_img.src = newSrc;
+                    overlay_img.onload = () => {
+                        overlay_img.style.opacity = "1";
+                        overlay_img.onload = null;
+                    }
+                }, 1000);
+            }
+        }
+        if (data.type == "visuals") {
+            const filterStr = `brightness(${data.brightness}%) blur(${data.blurness}px)`;
+            video.style.filter = filterStr;
+            image.style.filter = filterStr;
+
+            if (data.volume !== undefined) {
+                audio.volume = data.volume / 100;
+            }
+            if (data.color !== undefined) {
+                document.querySelector('.clock').style.color = data.color;
+                localStorage.setItem('displayColor', data.color);
+            }
+        }
+    }
+</script>
+
+</html>

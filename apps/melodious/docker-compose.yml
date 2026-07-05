@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: melodious-backend
+    container_name: melodious-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./songs:/app/songs
+      - ./assets:/app/assets
+      - ./backend:/app/backend
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    image: melodious-frontend
+    container_name: melodious-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

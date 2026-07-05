@@ -1,0 +1,26 @@
+.quote-app .quoteBox {
+    position: absolute;
+    transform: translateX(-50%) translateY(-50%);
+    top: 50%;
+    left: 50%;
+    background-color: #ffd8be;
+    border: 1px solid #e07a5f;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px;
+    max-width: 500px;
+}
+
+.quote-app .quote {
+    font-size: 1.2rem;
+    font-style: italic;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.quote-app .author {
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: right;
+    color: #555;
+}

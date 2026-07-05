@@ -1,0 +1,129 @@
+.artists-container {
+    padding: 20px 40px;
+}
+
+.artists-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.artist-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: white;
+}
+
+.artist-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-5px);
+}
+
+.artist-poster {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    corner-shape: squircle;
+    overflow: hidden;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.artist-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 0;
+}
+
+.artist-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+/* Other Artists List */
+.mt-40 {
+    margin-top: 40px;
+}
+
+.other-artists-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    padding-left: 20px;
+}
+
+.other-artist-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+    transition: color 0.2s;
+}
+
+.other-artist-item:hover {
+    color: #ff0844;
+}
+
+.dot {
+    color: #ff0844;
+}
+
+/* Artist Detail Hero */
+.artist-detail-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.artist-hero {
+    height: 200px;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    align-items: flex-end;
+    border-radius: 0 20px 0 0;
+}
+
+.artist-hero-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.artist-big-poster {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid white;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+}
+
+.artist-big-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.artist-name-big {
+    font-size: 4rem;
+    margin: 0;
+    font-weight: 800;
+    font-family: 'Oswald', sans-serif;
+}

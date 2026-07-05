@@ -1,0 +1,24 @@
+.idea-inbox-app .textsync {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background-color: rgb(255, 230, 196);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.idea-inbox-app .textsync textarea#text {
+    width: 400px;
+    height: 300px;
+    background-color: antiquewhite;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.idea-inbox-app .textsync button {
+    background-color: antiquewhite;
+    padding: 5px;
+    border-radius: 5px;
+}

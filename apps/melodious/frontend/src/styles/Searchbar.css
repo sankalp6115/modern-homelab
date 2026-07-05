@@ -1,0 +1,60 @@
+/* =========================================================================
+   SEARCH BAR COMPONENT STYLING
+   ========================================================================= */
+
+.search-container {
+    display: flex;
+    align-items: center;
+    background: rgba(43, 43, 67, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 2px 10px;
+    width: clamp(180px, 22vw, 280px);
+    transition: all 0.3s ease;
+}
+
+.search-container:focus-within {
+    background: rgba(60, 60, 90, 0.8);
+    border-color: #6969ff;
+    box-shadow: 0 0 10px rgba(105, 105, 255, 0.3);
+}
+
+.search-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 8px 10px;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.search-icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    transition: transform 0.2s ease;
+}
+
+.search-icon-btn:hover {
+    transform: scale(1.1);
+}
+
+.search-icon-btn img {
+    height: 20px;
+    width: 20px;
+    filter: brightness(0) invert(1);
+}
+
+@media (max-width: 500px) {
+    .search-container {
+        width: clamp(120px, 30vw, 180px);
+    }
+}

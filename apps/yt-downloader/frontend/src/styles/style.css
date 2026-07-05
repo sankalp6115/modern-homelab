@@ -1,0 +1,703 @@
+.yt-downloader-app {
+    --bg-color: #0b0f19;
+    --card-bg: rgba(17, 24, 39, 0.7);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --primary: #00f2fe;
+    --secondary: #4facfe;
+    --primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    --accent-gradient: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+    --success: #10b981;
+    --error: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --shadow-glow: rgba(0, 242, 254, 0.15);
+
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 15px;
+    overflow-y: auto;
+    background-image:
+        radial-gradient(at 0% 0%, rgba(0, 242, 254, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(161, 140, 209, 0.08) 0px, transparent 50%);
+    box-sizing: border-box;
+}
+
+.yt-downloader-app *,
+.yt-downloader-app *::before,
+.yt-downloader-app *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Custom Scrollbar */
+.yt-downloader-app ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.yt-downloader-app ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.yt-downloader-app ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.yt-downloader-app ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.yt-downloader-app .container {
+    max-width: 850px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Branding Header */
+.yt-downloader-app header {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.yt-downloader-app h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.yt-downloader-app header p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* Main Glassmorphic Card */
+.yt-downloader-app .glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4),
+        0 0 50px rgba(0, 242, 254, 0.03);
+    position: relative;
+    overflow: hidden;
+}
+
+.yt-downloader-app .glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--primary-gradient);
+}
+
+/* Navigation Tabs */
+.yt-downloader-app .tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 25px;
+    gap: 10px;
+}
+
+.yt-downloader-app .tab-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    padding: 12px 20px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.yt-downloader-app .tab-btn:hover {
+    color: var(--text-primary);
+}
+
+.yt-downloader-app .tab-btn.active {
+    color: var(--primary);
+}
+
+.yt-downloader-app .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--primary-gradient);
+    border-radius: 3px 3px 0 0;
+}
+
+/* Forms & Inputs */
+.yt-downloader-app .tab-content {
+    display: none;
+}
+
+.yt-downloader-app .tab-content.active {
+    display: block;
+    animation: yt-fadeIn 0.4s ease;
+}
+
+@keyframes yt-fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.yt-downloader-app .input-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.yt-downloader-app label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+}
+
+.yt-downloader-app input[type="text"],
+.yt-downloader-app textarea,
+.yt-downloader-app select {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 14px 16px;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-weight: 500;
+    outline: none;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.yt-downloader-app input[type="text"]:focus,
+.yt-downloader-app textarea:focus,
+.yt-downloader-app select:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 12px rgba(79, 172, 254, 0.2);
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.yt-downloader-app textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.yt-downloader-app .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+@media (max-width: 600px) {
+    .yt-downloader-app .row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Buttons */
+.yt-downloader-app .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--primary-gradient);
+    color: #040814;
+    border: none;
+    border-radius: 10px;
+    padding: 15px 25px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+}
+
+.yt-downloader-app .btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 242, 254, 0.35);
+}
+
+.yt-downloader-app .btn:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.yt-downloader-app .btn:disabled {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Info Preview Box */
+.yt-downloader-app .info-box {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: none;
+    animation: yt-fadeIn 0.4s ease;
+}
+
+.yt-downloader-app .info-box.show {
+    display: flex;
+    gap: 20px;
+}
+
+@media (max-width: 550px) {
+    .yt-downloader-app .info-box.show {
+        flex-direction: column;
+    }
+}
+
+.yt-downloader-app .info-meta {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+}
+
+.yt-downloader-app .info-meta h3 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+.yt-downloader-app .info-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    width: fit-content;
+    gap: 6px;
+}
+
+/* Alert Toast notifications */
+.yt-downloader-app .alert-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+    max-width: 350px;
+    width: 100%;
+}
+
+.yt-downloader-app .alert {
+    padding: 16px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    animation: yt-slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes yt-slideIn {
+    from {
+        transform: translateX(100%) translateY(-10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0) translateY(0);
+        opacity: 1;
+    }
+}
+
+.yt-downloader-app .alert-error {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: #fca5a5;
+}
+
+.yt-downloader-app .alert-success {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: #a7f3d0;
+}
+
+.yt-downloader-app .alert-close {
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: inherit;
+    opacity: 0.7;
+    font-size: 16px;
+}
+
+.yt-downloader-app .alert-close:hover {
+    opacity: 1;
+}
+
+/* Loaders */
+.yt-downloader-app .loader {
+    display: none;
+    text-align: center;
+    padding: 30px;
+}
+
+.yt-downloader-app .loader.show {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.yt-downloader-app .spinner {
+    border: 3px solid rgba(255, 255, 255, 0.05);
+    border-top: 3px solid var(--primary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: yt-spin 1s linear infinite;
+}
+
+@keyframes yt-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Download Queue Section */
+.yt-downloader-app .queue-section {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.yt-downloader-app .queue-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.yt-downloader-app .queue-header h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.yt-downloader-app .queue-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.yt-downloader-app .btn-outline {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+}
+
+.yt-downloader-app .btn-outline:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.yt-downloader-app .queue-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.yt-downloader-app .empty-queue {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* Queue Items */
+.yt-downloader-app .queue-item {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    animation: yt-itemFadeIn 0.3s ease-out;
+}
+
+@keyframes yt-itemFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.yt-downloader-app .queue-item-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.yt-downloader-app .queue-item-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    word-break: break-word;
+    line-height: 1.4;
+    flex: 1;
+}
+
+.yt-downloader-app .status-badge {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.yt-downloader-app .badge-resolving {
+    background: rgba(59, 130, 246, 0.15);
+    color: #93c5fd;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.yt-downloader-app .badge-queued {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fde047;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.yt-downloader-app .badge-downloading {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.yt-downloader-app .badge-converting {
+    background: rgba(161, 140, 209, 0.2);
+    color: #e9d5ff;
+    border: 1px solid rgba(161, 140, 209, 0.3);
+}
+
+.yt-downloader-app .badge-completed {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.yt-downloader-app .badge-error {
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.yt-downloader-app .badge-expired {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.yt-downloader-app .badge-cancelled {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Progress bar */
+.yt-downloader-app .progress-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.yt-downloader-app .progress-bar-bg {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.yt-downloader-app .progress-fill {
+    height: 100%;
+    background: var(--primary-gradient);
+    width: 0%;
+    transition: width 0.4s ease;
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(0, 242, 254, 0.4);
+}
+
+.yt-downloader-app .progress-fill.pulse {
+    animation: yt-progressPulse 1.5s infinite alternate;
+}
+
+@keyframes yt-progressPulse {
+    0% { opacity: 0.8; }
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 12px rgba(0, 242, 254, 0.6);
+    }
+}
+
+.yt-downloader-app .queue-item-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.yt-downloader-app .queue-item-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.yt-downloader-app .btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.yt-downloader-app .btn-sm-download {
+    background: var(--primary-gradient);
+    color: #040814;
+    box-shadow: 0 2px 8px rgba(0, 242, 254, 0.15);
+}
+
+.yt-downloader-app .btn-sm-download:hover {
+    box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+    transform: translateY(-1px);
+}
+
+.yt-downloader-app .btn-sm-cancel {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+}
+
+.yt-downloader-app .btn-sm-cancel:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.yt-downloader-app .btn-sm-remove {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+}
+
+.yt-downloader-app .btn-sm-remove:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.yt-downloader-app .queue-filter-select {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+}
+
+.yt-downloader-app .queue-filter-select:focus {
+    border-color: var(--secondary);
+}

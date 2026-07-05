@@ -1,0 +1,82 @@
+/* ---------------------------------------------Whole Part------------------------- */
+.whole {}
+
+/* ---------------------------------------Left Section------------------------------------------- */
+.left-section {
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 100%;
+    min-height: calc(100vh - var(--header-h) - var(--player-h));
+    position: sticky;
+    top: var(--header-h);
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(6px);
+}
+
+/* ---------------------------------------------------Greeting-------------------------------------------- */
+.greeting-div {
+    font-size: 1vw;
+    animation: greeting 1s 1 ease-out;
+}
+
+@keyframes greeting {
+    0% {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* -----------------------------------------------------Left Menu--------------------------------------------- */
+h4.left-menu-heading {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    opacity: 0.7;
+    font-weight: 100;
+}
+
+a.left-menu-option {
+    position: relative;
+    left: 10px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    display: block;
+    text-decoration: none;
+    color: white;
+
+    &:hover {
+        color: cyan;
+    }
+}
+
+a.left-menu-option::before {
+    content: '';
+    position: absolute;
+    right: 0px;
+    height: 33px;
+    width: 3px;
+    background-color: cyan;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: 0.1s transform;
+}
+
+a.left-menu-option:hover::before,
+a.left-menu-option.active::before {
+    transform: scaleY(1);
+    transform-origin: top;
+}
+
+a.left-menu-option img {
+    height: 20px;
+    vertical-align: bottom;
+    margin-right: 5px;
+}
+
+section.main-section {
+    padding: 20px;
+}

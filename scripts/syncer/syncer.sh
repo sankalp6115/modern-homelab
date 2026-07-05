@@ -1,0 +1,1 @@
+rsync -avz --progress --exclude-from="/Users/sankalpomar/Documents/HomeLab/syncer/.syncignore" -e "ssh -p 8022" "/Users/sankalpomar/Documents/HomeLab" "root@100.64.0.3:~/storage/apps/"
