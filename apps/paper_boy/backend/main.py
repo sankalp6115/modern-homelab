@@ -3,6 +3,8 @@ from fastapi.staticfiles import StaticFiles
 import asyncio
 import uvicorn
 import json
+from pathlib import Path
+import os
 
 app = FastAPI()
 
@@ -57,7 +59,7 @@ async def controller_ws(websocket: WebSocket):
             except Exception:
                 pass
 
-import os
+DIR_PATH = Path(__file__).resolve().parent.parent / "assets"
 
 @app.get("/api/assets")
 def get_assets():
@@ -76,11 +78,12 @@ def get_assets():
     }
     
     for category in assets.keys():
-        dir_path = os.path.join("static","assets",category)
-        if not os.path.exists(dir_path):
+        category_dir = DIR_PATH / category
+        if not category_dir.exists():
+            print(f"Could not find category directory: {category_dir}")
             continue
             
-        for file in os.listdir(dir_path):
+        for file in os.listdir(category_dir):
             ext = os.path.splitext(file)[1].lower()
             if ext in exts[category]:
                 if category in ["video", "image"]:
@@ -91,8 +94,7 @@ def get_assets():
                         "name": name,
                         "file": file
                     })
-                    
-    # Sort for consistent UI rendering
+
     assets["video"].sort()
     assets["image"].sort()
     assets["audio"].sort(key=lambda x: x["name"])
@@ -102,6 +104,7 @@ def get_assets():
 
 from pathlib import Path
 FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
+app.mount("/assets", StaticFiles(directory=str(DIR_PATH)), name="assets")
 app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
 
 
