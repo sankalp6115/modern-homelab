@@ -334,6 +334,7 @@ TermuxExpts/
 ├── quotes/             # Random quotes API
 ├── yt-downloader/      # YouTube video downloader
 ├── ping-tester.py      # Network scanner utility
+├── melodious           # Smart music player  
 └── README.md           # This file
 ```
 
