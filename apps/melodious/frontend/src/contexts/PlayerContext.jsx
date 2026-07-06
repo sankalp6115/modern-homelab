@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import Fuse from 'fuse.js';
 import { getAssetUrl } from '../utils/assets';
-import { backend, port } from '../backend_url';
 
 
 export const PlayerContext = createContext();
@@ -100,12 +99,8 @@ export const PlayerProvider = ({ children }) => {
   const [playlists, setPlaylists] = useState([]);
 
   const refetchPlaylists = React.useCallback(async () => {
-    const BACKEND_HOST = backend || window.location.hostname;
-    const PORT = port || "8000";
-    const BACKEND = `http://${BACKEND_HOST}:${PORT}`;
-
     try {
-      const res = await fetch(`${BACKEND}/api/playlists`);
+      const res = await fetch(`/api/playlists`);
       const data = await res.json();
       setPlaylists(data);
     } catch (err) {
@@ -114,24 +109,19 @@ export const PlayerProvider = ({ children }) => {
   }, []);
 
   const refetchSongs = React.useCallback(async () => {
-    // Derive backend host dynamically
-    const BACKEND_HOST = backend || window.location.hostname;
-    const PORT = port || "8000";
-    const BACKEND = `http://${BACKEND_HOST}:${PORT}`;
-    const API_BASE = `${BACKEND}/api`;
     const DEFAULT_ART = `/assets/album-arts/song-icon5.png`;
 
     try {
       const [songsRes, lyricsRes] = await Promise.all([
-        fetch(`${API_BASE}/songs`),
-        fetch(`${API_BASE}/lyrics`)
+        fetch(`/api/songs`),
+        fetch(`/api/lyrics`)
       ]);
       let songsData = await songsRes.json();
       const lyricsData = await lyricsRes.json();
 
       songsData = songsData.map(song => ({
         ...song,
-        file: `${BACKEND}/api/songs/stream/${encodeURIComponent(song.file)}`,
+        file: `/api/songs/stream/${encodeURIComponent(song.file)}`,
         albumArt: getAssetUrl(song.albumArt) || DEFAULT_ART,
         artists: Array.isArray(song.artists) ? song.artists : (song.artists ? [song.artists] : []),
       }));

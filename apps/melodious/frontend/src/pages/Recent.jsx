@@ -1,7 +1,7 @@
 import React, { use, useMemo } from 'react';
 import { PlayerContext } from '../contexts/PlayerContext';
 import { getAssetUrl } from '../utils/assets';
-import '../styles/playlist-detail.css'; // Reusing table styles
+import '../styles/playlist-detail.css';
 
 const Recent = () => {
     const {

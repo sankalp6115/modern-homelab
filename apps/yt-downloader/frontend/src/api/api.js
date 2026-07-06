@@ -1,8 +1,6 @@
-const API_BASE = 'http://localhost:8000';
-
 export const api = {
     async getInfo(url) {
-        const res = await fetch(`${API_BASE}/api/info`, {
+        const res = await fetch(`/api/info`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url }),
@@ -12,7 +10,7 @@ export const api = {
     },
 
     async enqueue(data) {
-        const res = await fetch(`${API_BASE}/api/enqueue`, {
+        const res = await fetch(`/api/enqueue`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
@@ -22,25 +20,25 @@ export const api = {
     },
 
     async getQueue() {
-        const res = await fetch(`${API_BASE}/api/queue`);
+        const res = await fetch(`/api/queue`);
         if (!res.ok) throw new Error('Failed to fetch queue');
         return res.json();
     },
 
     async cancelJob(id) {
-        const res = await fetch(`${API_BASE}/api/cancel/${id}`, { method: 'POST' });
+        const res = await fetch(`/api/cancel/${id}`, { method: 'POST' });
         if (!res.ok) throw new Error('Failed to cancel job');
         return res.json();
     },
 
     async removeJob(id) {
-        const res = await fetch(`${API_BASE}/api/remove/${id}`, { method: 'POST' });
+        const res = await fetch(`/api/remove/${id}`, { method: 'POST' });
         if (!res.ok) throw new Error('Failed to remove job');
         return res.json();
     },
 
     async clearFinished() {
-        const res = await fetch(`${API_BASE}/api/clear`, { method: 'POST' });
+        const res = await fetch(`/api/clear`, { method: 'POST' });
         if (!res.ok) throw new Error('Failed to clear');
         return res.json();
     },

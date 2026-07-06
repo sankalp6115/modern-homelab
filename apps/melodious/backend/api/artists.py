@@ -7,7 +7,7 @@ from utils.path_resolver import get_assets_dir
 
 router = APIRouter()
 
-@router.get("/")
+@router.get("")
 def get_artists():
     """List all artists in the system."""
     conn = get_connection()

@@ -6,7 +6,6 @@ const Explore = () => {
   const containerRef = useRef(null);
   const highlightRef = useRef(null);
 
-  // Auto-scroll to search results
   useEffect(() => {
     if (searchResults.length > 0 && containerRef.current) {
       const firstMatchId = searchResults[0];

@@ -1,15 +1,15 @@
 import React, { useState, useRef, useContext } from 'react';
 import { parseID3 } from '../utils/id3Parser';
 import { PlayerContext } from '../contexts/PlayerContext';
-import { backend, port } from '../backend_url';
+
 import "../styles/upload.css";
 
 const sanitizeFilename = (name) => {
     if (!name) return 'file';
     return name
         .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '') // remove accents
-        .replace(/[^a-zA-Z0-9._-]/g, '_') // replace non-alphanumeric/dot/dash with underscore
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9._-]/g, '_')
         .replace(/_+/g, '_') // collapse multiple underscores
         .replace(/^_+|_+$/g, ''); // trim underscores/dots/dashes from ends
 };
@@ -184,10 +184,6 @@ const Upload = () => {
 
         showToast(`Starting upload of ${readySongs.length} song(s)…`, 'info');
 
-        const BACKEND_HOST = backend || window.location.hostname;
-        const PORT = port || "8000";
-        const BACKEND = `http://${BACKEND_HOST}:${PORT}`;
-        const API_BASE = `${BACKEND}/api`;
 
         for (const song of readySongs) {
             // Update status to uploading
@@ -219,7 +215,7 @@ const Upload = () => {
                 }
                 formData.append('duration', duration);
 
-                const res = await fetch(`${API_BASE}/songs/upload`, {
+                const res = await fetch(`/api/songs/upload`, {
                     method: 'POST',
                     body: formData,
                 });

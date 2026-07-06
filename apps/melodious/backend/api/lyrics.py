@@ -3,8 +3,7 @@ from database import get_connection
 
 router = APIRouter()
 
-
-@router.get("/")
+@router.get("")
 def get_all_lyrics():
     conn = get_connection()
     cursor = conn.cursor()

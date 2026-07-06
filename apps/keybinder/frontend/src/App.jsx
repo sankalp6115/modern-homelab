@@ -17,8 +17,7 @@ const Keybinder = () => {
     if (!video) return;
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    // Connect to port 8000 on localhost, or fallback to current host in production
-    const host = window.location.hostname === 'localhost' ? 'localhost:8000' : window.location.host;
+    const host = window.location.host;
     const wsUrl = `${protocol}//${host}/keybinder/ws`;
 
     const socket = new WebSocket(wsUrl);

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { PlayerContext } from '../contexts/PlayerContext';
 import '../styles/artists.css';
 import { getAssetUrl } from '../utils/assets';
-import { backend, port } from "../backend_url";
+
 
 const ArtistDetail = () => {
     const { id } = useParams();
@@ -14,24 +14,20 @@ const ArtistDetail = () => {
 
     const fileInputRef = useRef(null);
 
-    const BACKEND_HOST = backend || window.location.hostname;
-    const PORT = port || "8000";
-    const BACKEND = `http://${BACKEND_HOST}:${PORT}`;
-
     useEffect(() => {
-        fetch(`${BACKEND}/api/artists/${id}`)
+        fetch(`/api/artists/${id}`)
             .then(res => res.json())
             .then(data => {
                 const sanitizedSongs = data.songs.map(song => ({
                     ...song,
-                    file: `${BACKEND}/api/songs/stream/${encodeURIComponent(song.file)}`,
+                    file: `/api/songs/stream/${encodeURIComponent(song.file)}`,
                     albumArt: getAssetUrl(song.albumArt),
                     artists: Array.isArray(song.artists) ? song.artists : [song.artists]
                 }));
                 setArtist({ ...data, image: getAssetUrl(data.image), songs: sanitizedSongs });
             })
             .catch(err => console.error("Failed to fetch artist details:", err));
-    }, [id, BACKEND]);
+    }, [id]);
 
     const handleImgLoad = () => {
         if (imgRef.current && window.ColorThief) {
@@ -53,7 +49,7 @@ const ArtistDetail = () => {
         formData.append('file', file);
 
         try {
-            const response = await fetch(`${BACKEND}/api/artists/${id}/image`, {
+            const response = await fetch(`/api/artists/${id}/image`, {
                 method: 'POST',
                 body: formData,
             });
@@ -76,15 +72,15 @@ const ArtistDetail = () => {
         <div className="artist-detail-container">
             <section className="artist-hero" style={{ background: headerBg }}>
                 <div className="artist-hero-content">
-                    <div 
-                        className="artist-big-poster" 
+                    <div
+                        className="artist-big-poster"
                         onClick={() => fileInputRef.current?.click()}
                         style={{ cursor: 'pointer', position: 'relative' }}
                         title="Click to update artist image"
                     >
                         <img
                             ref={imgRef}
-                            src={artist.image || `${BACKEND}/assets/artist-images/default.jpg`}
+                            src={artist.image || `/assets/artist-images/default.jpg`}
                             alt={artist.name}
                             onLoad={handleImgLoad}
                             onError={(e) => {
@@ -95,19 +91,19 @@ const ArtistDetail = () => {
                             crossOrigin="anonymous"
                         />
                         <div className="upload-overlay" style={{
-                            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, 
-                            background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', 
+                            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                            background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center',
                             justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s',
                             color: 'white', fontWeight: 'bold'
                         }} onMouseEnter={(e) => e.currentTarget.style.opacity = 1} onMouseLeave={(e) => e.currentTarget.style.opacity = 0}>
                             Update Image
                         </div>
-                        <input 
-                            type="file" 
-                            ref={fileInputRef} 
-                            style={{ display: 'none' }} 
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{ display: 'none' }}
                             accept="image/jpeg, image/png, image/webp"
-                            onChange={handleImageUpload} 
+                            onChange={handleImageUpload}
                         />
                     </div>
                     <div className="hero-info">

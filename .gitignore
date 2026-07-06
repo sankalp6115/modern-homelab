@@ -1,18 +1,47 @@
+# all
 __pycache__
 node_modules
 .vscode
 .directorymap
-
-downloads/*
-!downloads/.gitkeep
-
-storage/*
-!storage/.gitkeep
-
+archive
 .DS_Store
 certs
 venv
 4.2.3
 frontend-sep
-archive
 dist
+
+# yt-downloader
+downloads/*
+!downloads/.gitkeep
+
+# file server
+storage/*
+!storage/.gitkeep
+
+# melodious
+*.db
+apps/melodious/assets/album-arts/*
+!apps/melodious/assets/album-arts/.gitkeep
+
+apps/melodious/assets/artist-images/*
+!apps/melodious/assets/artist-images/.gitkeep
+
+apps/melodious/assets/lyrics/*
+~apps/melodious/assets/album-arts/.gitkeep
+
+apps/melodious/assets/data/*
+~apps/melodious/assets/data/.gitkeep
+
+# paper boy
+static/assets/video/*
+!static/assets/video/.gitkeep
+
+static/assets/image/*
+!static/assets/image/.gitkeep
+
+static/assets/audio/*
+!static/assets/audio/.gitkeep
+
+static/assets/overlay/*
+!static/assets/overlay/.gitkeep

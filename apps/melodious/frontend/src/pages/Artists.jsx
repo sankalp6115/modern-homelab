@@ -2,21 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/artists.css';
 import { getAssetUrl } from '../utils/assets';
-import { backend, port } from "../backend_url";
 
 const Artists = () => {
     const [artists, setArtists] = useState([]);
 
-    const BACKEND_HOST = backend || window.location.hostname;
-    const PORT = port || "8000";
-    const BACKEND = `http://${BACKEND_HOST}:${PORT}`;
-
     useEffect(() => {
-        fetch(`${BACKEND}/api/artists`)
+        fetch(`/api/artists`)
             .then(res => res.json())
             .then(data => setArtists(data))
             .catch(err => console.error("Failed to fetch artists:", err));
-    }, [BACKEND]);
+    }, []);
 
     const featuredArtists = artists.filter(a => a.image && a.image.trim() !== "");
     const otherArtists = artists.filter(a => !a.image || a.image.trim() === "");

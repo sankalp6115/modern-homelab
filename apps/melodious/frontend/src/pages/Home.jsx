@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { PlayerContext } from '../contexts/PlayerContext';
 import { getAssetUrl } from '../utils/assets';
 import '../styles/home.css';
-import { backend, port } from "../backend_url";
 
 const Home = () => {
   const { playlists, refetchPlaylists } = useContext(PlayerContext);
@@ -71,12 +70,8 @@ const Home = () => {
       formData.append("poster", posterFile);
     }
 
-    const BACKEND_HOST = backend || window.location.hostname;
-    const PORT = port || "8000";
-    const BACKEND = `http://${BACKEND_HOST}:${PORT}`;
-
     try {
-      const response = await fetch(`${BACKEND}/api/playlists/`, {
+      const response = await fetch(`/api/playlists/`, {
         method: "POST",
         body: formData,
       });

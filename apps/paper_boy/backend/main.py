@@ -106,4 +106,8 @@ app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="fronte
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000)
+    import argparse
+    parser = argparse.ArgumentParser(description="Backend Server")
+    parser.add_argument("--port", type=int, default=8000, help="Port to bind the server to")
+    args = parser.parse_args()
+    uvicorn.run("main:app", port=args.port, host="0.0.0.0")

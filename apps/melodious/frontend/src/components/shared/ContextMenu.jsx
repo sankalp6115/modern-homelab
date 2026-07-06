@@ -1,6 +1,5 @@
 import React, { use, useState, useEffect } from 'react';
 import { PlayerContext } from '../../contexts/PlayerContext';
-import { backend, port } from '../../backend_url';
 import "../../styles/ContextMenu.css";
 
 const ContextMenu = () => {
@@ -33,7 +32,6 @@ const ContextMenu = () => {
 
     useEffect(() => {
         const handleContextMenu = (e) => {
-            // Find if we clicked on a song row or playlist card
             const songRow = e.target.closest('[data-song-id]');
             const playlistCard = e.target.closest('[data-playlist-id]');
 
@@ -92,12 +90,8 @@ const ContextMenu = () => {
         if (!menuData.song) return;
         const songId = menuData.song.id;
 
-        const BACKEND_HOST = backend || window.location.hostname;
-        const PORT = port || "8000";
-        const BACKEND = `http://${BACKEND_HOST}:${PORT}`;
-
         try {
-            const res = await fetch(`${BACKEND}/api/songs/${songId}/favorite`, {
+            const res = await fetch(`/api/songs/${songId}/favorite`, {
                 method: 'POST'
             });
             if (!res.ok) throw new Error("Failed to toggle favorite");
@@ -113,15 +107,11 @@ const ContextMenu = () => {
         if (!menuData.song) return;
         const songId = menuData.song.id;
 
-        const BACKEND_HOST = backend || window.location.hostname;
-        const PORT = port || "8000";
-        const BACKEND = `http://${BACKEND_HOST}:${PORT}`;
-
         const formData = new FormData();
         formData.append("song_id", songId);
 
         try {
-            const res = await fetch(`${BACKEND}/api/playlists/${playlistId}/songs`, {
+            const res = await fetch(`/api/playlists/${playlistId}/songs`, {
                 method: 'POST',
                 body: formData
             });
@@ -144,12 +134,8 @@ const ContextMenu = () => {
         const songId = menuData.song.id;
         const playlistId = menuData.inPlaylistId;
 
-        const BACKEND_HOST = backend || window.location.hostname;
-        const PORT = port || "8000";
-        const BACKEND = `http://${BACKEND_HOST}:${PORT}`;
-
         try {
-            const res = await fetch(`${BACKEND}/api/playlists/${playlistId}/songs/${songId}`, {
+            const res = await fetch(`/api/playlists/${playlistId}/songs/${songId}`, {
                 method: 'DELETE'
             });
             if (!res.ok) throw new Error("Failed to remove song from playlist");
@@ -171,12 +157,8 @@ const ContextMenu = () => {
             return;
         }
 
-        const BACKEND_HOST = backend || window.location.hostname;
-        const PORT = port || "8000";
-        const BACKEND = `http://${BACKEND_HOST}:${PORT}`;
-
         try {
-            const res = await fetch(`${BACKEND}/api/playlists/${playlistId}`, {
+            const res = await fetch(`/api/playlists/${playlistId}`, {
                 method: 'DELETE'
             });
             if (!res.ok) throw new Error("Failed to delete playlist");
@@ -206,12 +188,8 @@ const ContextMenu = () => {
         const song = deleteModalState.song;
         if (!song) return;
 
-        const BACKEND_HOST = backend || window.location.hostname;
-        const PORT = port || "8000";
-        const BACKEND = `http://${BACKEND_HOST}:${PORT}`;
-
         try {
-            const res = await fetch(`${BACKEND}/api/songs/${song.id}`, {
+            const res = await fetch(`/api/songs/${song.id}`, {
                 method: 'DELETE'
             });
             if (!res.ok) throw new Error("Failed to delete song from library");

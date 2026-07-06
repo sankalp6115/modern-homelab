@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { PlayerContext } from '../contexts/PlayerContext';
 import { getAssetUrl } from '../utils/assets';
 import '../styles/playlist-detail.css';
-import { backend, port } from "../backend_url";
+
 
 const PlaylistDetail = () => {
     const { id } = useParams();
@@ -14,24 +14,20 @@ const PlaylistDetail = () => {
     const containerRef = useRef(null);
     const highlightRef = useRef(null);
 
-    const BACKEND_HOST = backend || window.location.hostname;
-    const PORT = port || "8000";
-    const BACKEND = `http://${BACKEND_HOST}:${PORT}`;
-
     const fetchPlaylistDetails = React.useCallback(() => {
-        fetch(`${BACKEND}/api/playlists/${id}`)
+        fetch(`/api/playlists/${id}`)
             .then(res => res.json())
             .then(data => {
                 const sanitizedSongs = data.songs.map(song => ({
                     ...song,
-                    file: `${BACKEND}/api/songs/stream/${encodeURIComponent(song.file)}`,
+                    file: `/api/songs/stream/${encodeURIComponent(song.file)}`,
                     albumArt: getAssetUrl(song.albumArt),
                     artists: Array.isArray(song.artists) ? song.artists : [song.artists]
                 }));
                 setPlaylist({ ...data, poster: getAssetUrl(data.poster), songs: sanitizedSongs });
             })
             .catch(err => console.error("Failed to fetch playlist:", err));
-    }, [id, BACKEND]);
+    }, [id]);
 
     useEffect(() => {
         fetchPlaylistDetails();

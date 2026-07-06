@@ -89,7 +89,7 @@ def fetch_songs_with_artists(cursor, where_clause: str = "", params: tuple = ())
 
 # ---------- ROUTES ----------
 
-@router.get("/")
+@router.get("")
 def get_all_songs():
     conn = get_connection()
     cursor = conn.cursor()

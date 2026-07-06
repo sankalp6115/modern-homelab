@@ -10,7 +10,7 @@ from .songs import sanitize_filename
 router = APIRouter()
 
 
-@router.get("/")
+@router.get("")
 def get_playlists():
     conn = get_connection()
     cursor = conn.cursor()

@@ -10,17 +10,13 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"], 
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],   
+    allow_headers=["*"],   
 )
 
 app.include_router(router)
-
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-from pathlib import Path
 
 FRONTEND_FOLDER = Path(__file__).parent.parent / "frontend" / "dist"
 

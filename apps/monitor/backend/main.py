@@ -35,4 +35,8 @@ async def serve_spa(full_path: str):
     return FileResponse(FRONTEND_FOLDER / "index.html")
 
 if __name__ == "__main__":
-    uvicorn.run("main:app",port=8000,host="0.0.0.0")
+    import argparse
+    parser = argparse.ArgumentParser(description="Backend Server")
+    parser.add_argument("--port", type=int, default=8000, help="Port to bind the server to")
+    args = parser.parse_args()
+    uvicorn.run("main:app", port=args.port, host="0.0.0.0")

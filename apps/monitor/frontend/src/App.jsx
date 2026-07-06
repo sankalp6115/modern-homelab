@@ -2,17 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Sparkline, CircularProgress } from './components/Charts';
 import "./styles/style.css"
 
-const getApiBase = () => {
-  if (import.meta.env.DEV) {
-    const host = window.location.hostname || 'localhost';
-    return `http://${host}:8000/monitor/`;
-  }
-  return '';
-};
+const API_BASE = '/';
 
-const API_BASE = getApiBase();
-
-// --- Formatting Helpers ---
 const formatBytes = (bytes, decimals = 2) => {
   if (bytes === 0 || !bytes) return '0 Bytes';
   const k = 1024;
