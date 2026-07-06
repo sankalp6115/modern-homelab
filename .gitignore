@@ -34,14 +34,14 @@ apps/melodious/assets/data/*
 ~apps/melodious/assets/data/.gitkeep
 
 # paper boy
-static/assets/video/*
-!static/assets/video/.gitkeep
+apps/paper_boy/frontend/assets/video/*
+!apps/paper_boy/frontend/assets/video/.gitkeep
 
-static/assets/image/*
-!static/assets/image/.gitkeep
+apps/paper_boy/frontend/assets/image/*
+!apps/paper_boy/frontend/assets/image/.gitkeep
 
-static/assets/audio/*
-!static/assets/audio/.gitkeep
+apps/paper_boy/frontend/assets/audio/*
+!apps/paper_boy/frontend/assets/audio/.gitkeep
 
-static/assets/overlay/*
-!static/assets/overlay/.gitkeep
+apps/paper_boy/frontend/assets/overlay/*
+!apps/paper_boy/frontend/assets/overlay/.gitkeep
