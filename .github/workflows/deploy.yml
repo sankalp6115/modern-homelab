@@ -12,7 +12,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        app: [file_server, home, idea_inbox, keybinder, monitor, quote, yt-downloader, melodious]
+        app: [file_server, home, idea_inbox, keybinder, monitor, quote, yt-downloader, melodious, paper_boy]
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
@@ -23,7 +23,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Install and build frontend
         working-directory: source/apps/${{ matrix.app }}/frontend
@@ -59,43 +59,4 @@ jobs:
           git add -f apps/${{ matrix.app }}/frontend/dist || true
           git add .
           git commit -m "Deploy ${{ matrix.app }}: ${{ github.sha }}" || echo "Nothing to commit"
-          git push origin deploy
-
-  build-paper-boy:
-    needs: build-vite-apps
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout main
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          path: source
-
-      - name: Assemble deploy output (no build needed)
-        run: |
-          mkdir -p deploy_output/backend
-          cp -r source/apps/paper_boy/backend/* deploy_output/backend/
-          mkdir -p deploy_output/frontend
-          cp -r source/apps/paper_boy/frontend/* deploy_output/frontend/
-
-      - name: Checkout deploy branch
-        uses: actions/checkout@v4
-        with:
-          ref: deploy
-          path: deploy_repo
-          fetch-depth: 0
-
-      - name: Replace app folder in deploy branch
-        run: |
-          rm -rf deploy_repo/apps/paper_boy
-          mkdir -p deploy_repo/apps/paper_boy
-          cp -r deploy_output/* deploy_repo/apps/paper_boy/
-
-      - name: Commit and push
-        working-directory: deploy_repo
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add .
-          git commit -m "Deploy paper_boy: ${{ github.sha }}" || echo "Nothing to commit"
           git push origin deploy

@@ -1,5 +1,6 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 import asyncio
 import uvicorn
 import json
@@ -103,10 +104,17 @@ def get_assets():
     return assets
 
 from pathlib import Path
-FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
-app.mount("/assets", StaticFiles(directory=str(DIR_PATH)), name="assets")
-app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
+FRONTEND_DIR = Path(__file__).parent.parent / "frontend" / "dist"
 
+@app.get("/controller")
+async def controller():
+    return FileResponse(FRONTEND_DIR / "controller.html")
+
+@app.get("/")
+async def home():
+    return FileResponse(FRONTEND_DIR / "index.html")
+
+app.mount("/assets", StaticFiles(directory=str(DIR_PATH)), name="assets")
 
 if __name__ == "__main__":
     import argparse
