@@ -12,7 +12,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        app: [file_server, home, idea_inbox, keybinder, monitor, quote, yt-downloader, melodious, paper_boy]
+        app: [file_server, home, idea_inbox, keybinder, monitor, quote, yt_downloader, melodious, paper_boy]
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
