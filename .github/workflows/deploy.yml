@@ -37,6 +37,7 @@ jobs:
           cp -r source/apps/${{ matrix.app }}/backend/* deploy_output/backend/
           mkdir -p deploy_output/frontend/dist
           cp -r source/apps/${{ matrix.app }}/frontend/dist/* deploy_output/frontend/dist/
+          cp source/apps/${{ matrix.app }}/start.sh deploy_output/start.sh || true
 
       - name: Checkout deploy branch
         uses: actions/checkout@v4
