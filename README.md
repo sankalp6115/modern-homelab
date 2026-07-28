@@ -1,27 +1,73 @@
-# Termux Setup Scripts
+# Termux Bootstrap
 
-This project contains shell scripts that are used to configure a complete Termux setup automatically. 
+A simple bootstrap setup for turning a fresh Termux installation into a more usable development environment.
 
-## What it does
+## What this project does
 
-It takes a fresh Termux installation and turns it into a ready to use environment. It updates the system, requests storage permissions, installs required packages, configures SSH access, creates necessary folders, and applies custom configurations for your shell. By running a single script, you can have a fully working setup without doing everything manually.
+This repository automates the boring setup work for a new Termux environment:
 
-## What every file does
+- updates Termux and prepares storage access
+- installs core packages for development and shell usage
+- configures SSH access and enables the SSH service
+- creates a cleaner home-directory layout for apps, logs, scripts, and secrets
+- installs and applies shell customization files such as zsh, tmux, aliases, and startup scripts
+- sets up an SSH login notification flow with sound, toast, and logging
 
-The main folder has a bootstrap folder which contains all the scripts and files.
+## Quick start
 
-* bootstrap/bootstrap.sh: The main script that runs all the numbered scripts below in the correct order. You only need to run this file.
-* bootstrap/01-system.sh: Updates Termux, asks for storage permissions, and checks your system version and internet connection.
-* bootstrap/02-packages.sh: Installs basic and required software packages for the system.
-* bootstrap/03-ssh.sh: Configures SSH so you can connect to Termux remotely.
-* bootstrap/04-directories.sh: Creates the folders needed for the setup.
-* bootstrap/05-config.sh: Applies custom settings by copying configuration files to the correct locations.
-* bootstrap/06-services.sh: Sets up Termux background services.
-* bootstrap/07-apps.sh: Installs extra applications and tools.
-* bootstrap/08-opt-packages.sh: Installs optional software packages that might be useful.
-* bootstrap/assets/: A folder that stores extra files like audio used during the setup process.
-* bootstrap/config/: A folder that holds the configuration files (like .bashrc, .zshrc, and ssh_login.sh) that are copied to your home directory.
+On a fresh Termux installation, run:
 
-## Getting involved
+```bash
+pkg update && pkg upgrade -y
+pkg install -y git
 
-If you want to help improve this project, contributions are very welcome. The code is written in simple bash scripts. Please take some time to read the source code to understand how everything works before making changes or adding new features. Reading the code is the best way to learn how the setup is done.
+git clone https://github.com/your-username/termux-bootstrap.git
+cd termux-bootstrap/bootstrap
+bash bootstrap.sh
+```
+
+If you are using a fork or a local copy, replace the clone URL with your own repository URL.
+
+## What to expect
+
+The bootstrap process will:
+
+1. ask you to continue after the initial system update
+2. prompt you to grant storage permissions if needed
+3. ask you to set an SSH password
+4. install the requested packages and services
+5. copy shell configuration files into your home directory
+
+## Repository layout
+
+- bootstrap/bootstrap.sh: main entry point that runs the setup steps in order
+- bootstrap/01-system.sh: system update and storage setup
+- bootstrap/02-packages.sh: installs essential packages
+- bootstrap/03-ssh.sh: sets SSH password
+- bootstrap/04-directories.sh: creates project directories
+- bootstrap/05-config.sh: copies configuration files and startup scripts
+- bootstrap/06-services.sh: enables and starts services
+- bootstrap/07-env.sh: creates an environment file location
+- bootstrap/08-opt-packages.sh: installs optional packages
+- bootstrap/config/: source config files and startup helpers
+- bootstrap/assets/: bundled assets such as audio files
+
+## Configuration locations
+
+The setup uses a project-specific config folder under your home directory:
+
+```text
+$HOME/.config/termux-bootstrap/
+```
+
+This keeps startup scripts, helper scripts, and secrets separated from the rest of your home directory.
+
+## Notes
+
+- Some steps require network access and Termux storage permission.
+- The bootstrap is designed to be run from inside Termux, not from a regular desktop shell.
+- If you want to customize the behavior, edit the files in the bootstrap folder before running the setup.
+
+## Contributing
+
+If you want to improve the project, feel free to fork it and submit changes. The scripts are intentionally simple and easy to read, so they are a good place to learn and experiment with shell automation.
