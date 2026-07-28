@@ -4,21 +4,17 @@ eval "$(zoxide init zsh)"
 alias python='python3.11'
 alias pip='pip3.11'
 
+CONFIG_ROOT="${XDG_CONFIG_HOME:-$HOME/.config}/termux-bootstrap"
+
+if [[ -f "$HOME/.aliases" ]]; then
+    . "$HOME/.aliases"
+fi
+
 if [[ -o interactive && -n "$SSH_CLIENT" ]]; then
-    read -r client_ip client_port server_port <<< "$SSH_CLIENT"
-
-    termux-media-player play "$HOME/system_scripts/login.mp3" >/dev/null 2>&1
-    termux-notification \
-        --title "SSH Login" \
-        --content "${client_ip}:${client_port} SSHed to server" \
-        >/dev/null 2>&1
-
-    mkdir -p "$HOME/log"
-
-    printf '[%s] %s:%s logged in\n' \
-        "$(date '+%Y-%m-%d %H:%M:%S')" \
-        "$client_ip" \
-        "$client_port" >> "$HOME/logs/ssh_login.log"
+    SSH_SCRIPT="$CONFIG_ROOT/scripts/ssh_login.sh"
+    if [[ -f "$SSH_SCRIPT" ]]; then
+        bash "$SSH_SCRIPT"
+    fi
 fi
 
 # Trash function
@@ -45,4 +41,6 @@ empty-trash() {
 
 alias rm='trash'
 
-bash $PREFIX/etc/motd.sh
+if [[ -f "$PREFIX/etc/motd.sh" ]]; then
+    bash "$PREFIX/etc/motd.sh"
+fi

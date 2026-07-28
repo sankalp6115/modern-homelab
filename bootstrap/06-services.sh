@@ -18,6 +18,4 @@ else
   echo "SSH ✗"
 fi
 
-sv-enable crond || echo "Warning: Failed to enable crond"
-sv up crond || echo "Warning: Failed to start crond"
 echo "Health check complete."
