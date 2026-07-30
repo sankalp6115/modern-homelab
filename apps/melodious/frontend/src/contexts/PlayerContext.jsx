@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import Fuse from 'fuse.js';
 import { getAssetUrl } from '../utils/assets';
+import { buildApiUrl, getStoredApiBase, setApiBase as setGlobalApiBase } from '../utils/api';
 
 
 export const PlayerContext = createContext();
@@ -55,10 +56,33 @@ export const PlayerProvider = ({ children }) => {
     } catch { return true; }
   });
   const [isRestored, setIsRestored] = useState(false);
+  const [apiBase, setApiBaseState] = useState(() => getStoredApiBase());
+  const [wallpaper, setWallpaperState] = useState(() => {
+    try {
+      const saved = localStorage.getItem('melodious_wallpaper:v1');
+      return saved || '/assets/images/backgrounds/BG2.jpg';
+    } catch {
+      return '/assets/images/backgrounds/BG2.jpg';
+    }
+  });
 
   useEffect(() => {
     localStorage.setItem("melodious_is_oneko_enabled:v1", JSON.stringify(isOnekoEnabled));
   }, [isOnekoEnabled]);
+
+  useEffect(() => {
+    localStorage.setItem('melodious_wallpaper:v1', wallpaper);
+    document.documentElement.style.setProperty('--app-wallpaper', `url(${wallpaper})`);
+  }, [wallpaper]);
+
+  useEffect(() => {
+    const handleApiBaseChanged = () => {
+      setApiBaseState(getStoredApiBase());
+    };
+
+    window.addEventListener('melodious-api-base-changed', handleApiBaseChanged);
+    return () => window.removeEventListener('melodious-api-base-changed', handleApiBaseChanged);
+  }, []);
   const [recentSongIds, setRecentSongIds] = useState(() => {
     try {
       const saved = localStorage.getItem("melodious_recent_songs:v1");
@@ -98,30 +122,39 @@ export const PlayerProvider = ({ children }) => {
 
   const [playlists, setPlaylists] = useState([]);
 
+  const updateApiBase = useCallback((value) => {
+    const normalized = setGlobalApiBase(value);
+    setApiBaseState(normalized);
+  }, []);
+
+  const updateWallpaper = useCallback((value) => {
+    setWallpaperState(value);
+  }, []);
+
   const refetchPlaylists = React.useCallback(async () => {
     try {
-      const res = await fetch(`/api/playlists`);
+      const res = await fetch(buildApiUrl('/api/playlists'));
       const data = await res.json();
       setPlaylists(data);
     } catch (err) {
       console.error("Failed to fetch playlists:", err);
     }
-  }, []);
+  }, [apiBase]);
 
   const refetchSongs = React.useCallback(async () => {
     const DEFAULT_ART = `/assets/album-arts/song-icon5.png`;
 
     try {
       const [songsRes, lyricsRes] = await Promise.all([
-        fetch(`/api/songs`),
-        fetch(`/api/lyrics`)
+        fetch(buildApiUrl('/api/songs')),
+        fetch(buildApiUrl('/api/lyrics'))
       ]);
       let songsData = await songsRes.json();
       const lyricsData = await lyricsRes.json();
 
       songsData = songsData.map(song => ({
         ...song,
-        file: `/api/songs/stream/${encodeURIComponent(song.file)}`,
+        file: buildApiUrl(`/api/songs/stream/${encodeURIComponent(song.file)}`),
         albumArt: getAssetUrl(song.albumArt) || DEFAULT_ART,
         artists: Array.isArray(song.artists) ? song.artists : (song.artists ? [song.artists] : []),
       }));
@@ -131,12 +164,12 @@ export const PlayerProvider = ({ children }) => {
     } catch (err) {
       console.error("API load failed:", err);
     }
-  }, []);
+  }, [apiBase]);
 
   useEffect(() => {
     refetchSongs();
     refetchPlaylists();
-  }, [refetchSongs, refetchPlaylists]);
+  }, [apiBase, refetchSongs, refetchPlaylists]);
 
   // Persist basic settings
   useEffect(() => {
@@ -422,6 +455,7 @@ export const PlayerProvider = ({ children }) => {
     searchQuery, setSearchQuery, searchResults, isOnekoEnabled, setIsOnekoEnabled,
     recentSongIds, maxRecents, setMaxRecents,
     playlists, refetchPlaylists,
+    apiBase, updateApiBase, wallpaper, updateWallpaper,
     getNextSongInfo,
     setIsShuffled, setIsLooped, setVolume, setPlaybackRate, setActiveQueue,
     playSong, togglePlayPause, nextSong, prevSong,
@@ -433,6 +467,7 @@ export const PlayerProvider = ({ children }) => {
     searchQuery, searchResults, isOnekoEnabled,
     recentSongIds, maxRecents,
     playlists, refetchPlaylists,
+    apiBase, wallpaper,
     getNextSongInfo,
     playSong, togglePlayPause, nextSong, prevSong,
     addToQueueNext, addToQueueLast,

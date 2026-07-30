@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { PlayerProvider } from './contexts/PlayerContext';
 import Layout from './components/layout/Layout';
 import Oneko from './components/shared/Oneko.jsx';
@@ -26,7 +26,7 @@ const Loading = () => <div className="loading-screen">Loading Melodious…</div>
 function App() {
   return (
     <PlayerProvider>
-      <HashRouter>
+      <BrowserRouter>
         <div className="app-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
           <Suspense fallback={<Loading />}>
             <Routes>
@@ -49,7 +49,7 @@ function App() {
             <EasterEggs />
           </Suspense>
         </div>
-      </HashRouter>
+      </BrowserRouter>
     </PlayerProvider>
   );
 }

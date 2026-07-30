@@ -1,16 +1,16 @@
 import React, { use, useEffect, useState } from 'react';
 import { PlayerContext } from '../contexts/PlayerContext';
 import '../styles/Settings.css';
+import {buildApiUrl} from '../utils/api';
 
 const Settings = () => {
-  const { setPlaybackRate, playbackRate, isOnekoEnabled, setIsOnekoEnabled } = use(PlayerContext);
+  const { setPlaybackRate, playbackRate, isOnekoEnabled, setIsOnekoEnabled, apiBase, updateApiBase, wallpaper, updateWallpaper } = use(PlayerContext);
   const [isSpeedEnabled, setIsSpeedEnabled] = useState(false);
-
-  // Broadcast Channel for communication with main music player (mimicking legacy broadcast setup if needed, 
-  // though Context is better within the same app, I'll keep the logic for compatibility if other tabs open)
+  const [wallpaperArray, setWallpaperArray] = useState([]);
+  const [backendIp, setBackendIp] = useState(apiBase || '');
+  
   useEffect(() => {
     const channel = new BroadcastChannel("music_channel");
-
     channel.onmessage = (event) => {
       const { action, value } = event.data;
       if (action === "toggleSpeedControl") setIsSpeedEnabled(value);
@@ -18,6 +18,23 @@ const Settings = () => {
 
     return () => channel.close();
   }, []);
+
+  useEffect(() => {
+    setBackendIp(apiBase || '');
+  }, [apiBase]);
+
+  useEffect(() => {
+    const wallpaper_api = async () => {
+      try {
+        const data = await fetch(buildApiUrl('/api/wallpaper'));
+        const wallpaperData = await data.json();
+        setWallpaperArray(wallpaperData);
+      } catch (err) {
+        console.error('Failed to fetch wallpapers:', err);
+      }
+    }
+    wallpaper_api();
+  }, [apiBase])
 
   const toggleOneko = () => {
     const newVal = !isOnekoEnabled;
@@ -42,6 +59,43 @@ const Settings = () => {
         >
           {isOnekoEnabled ? 'Disable Oneko' : 'Enable Oneko'}
         </button>
+      </div>
+
+      <div className="settings-card row-layout">
+        <span className="backend_ip setting-label">Backend IP:</span>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <input
+            type="text"
+            name="backend_ip"
+            id="backend_ip"
+            className='setting-input'
+            value={backendIp}
+            onChange={(e) => setBackendIp(e.target.value)}
+            placeholder="http://localhost:8000"
+          />
+          <button type="button" className="setting-btn setting-btn-primary" onClick={() => updateApiBase(backendIp)}>
+            Apply
+          </button>
+        </div>
+      </div>
+
+      <div className="settings-card row-layout">
+        <span className="setting-label">Wallpaper</span>
+        <div className="setting-slider">
+          {wallpaperArray.map((item, index) => {
+            const imgUrl = buildApiUrl(`/api/wallpaper/${item}`);
+            return (
+              <img
+                src={imgUrl}
+                key={index}
+                alt={item}
+                className={`setting-wallpaper ${wallpaper === imgUrl ? 'active-wallpaper' : ''}`}
+                onClick={() => updateWallpaper(imgUrl)}
+                style={{ cursor: 'pointer' }}
+              />
+            );
+          })}
+        </div>
       </div>
     </section>
   );

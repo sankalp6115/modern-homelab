@@ -25,7 +25,6 @@ for song in songs:
     title_map[norm] = song["id"]
     normalized_titles.append(norm)
 
-# Process lyrics
 for entry in lyrics:
     raw_title = entry.get("title", "")
     norm_title = normalize(raw_title)

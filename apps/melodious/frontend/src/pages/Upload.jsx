@@ -1,6 +1,7 @@
 import React, { useState, useRef, useContext } from 'react';
 import { parseID3 } from '../utils/id3Parser';
 import { PlayerContext } from '../contexts/PlayerContext';
+import {buildApiUrl} from '../utils/api';
 
 import "../styles/upload.css";
 
@@ -10,8 +11,8 @@ const sanitizeFilename = (name) => {
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/[^a-zA-Z0-9._-]/g, '_')
-        .replace(/_+/g, '_') // collapse multiple underscores
-        .replace(/^_+|_+$/g, ''); // trim underscores/dots/dashes from ends
+        .replace(/_+/g, '_')
+        .replace(/^_+|_+$/g, '');
 };
 
 const Upload = () => {
@@ -21,7 +22,6 @@ const Upload = () => {
     const fileInputRef = useRef(null);
     const { refetchSongs } = useContext(PlayerContext);
 
-    // Show local UI feedback toast
     const showToast = (message, type = 'info') => {
         setToast({ message, type });
         setTimeout(() => {
@@ -29,7 +29,6 @@ const Upload = () => {
         }, 4000);
     };
 
-    // Convert file size to readable format
     const formatBytes = (bytes) => {
         if (bytes === 0) return '0 Bytes';
         const k = 1024;
@@ -38,7 +37,6 @@ const Upload = () => {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
 
-    // Helper to get audio duration client-side
     const getAudioDuration = (file) => {
         return new Promise((resolve) => {
             const audio = new Audio();
@@ -55,10 +53,8 @@ const Upload = () => {
         });
     };
 
-    // Trigger file parsing for an array of files
     const processFiles = async (files) => {
         const audioFiles = Array.from(files).filter(file => {
-            // Allow audio files
             return file.type.startsWith('audio/') || file.name.endsWith('.mp3');
         });
 
@@ -69,7 +65,6 @@ const Upload = () => {
 
         showToast(`Processing ${audioFiles.length} file(s)…`, 'info');
 
-        // Create parsing placeholders first for immediate UI response
         const newPlaceholders = audioFiles.map(file => {
             const id = `${file.name}-${file.size}-${Date.now()}-${Math.random()}`;
             return {
@@ -78,14 +73,13 @@ const Upload = () => {
                 fileSize: file.size,
                 status: 'parsing',
                 metadata: null,
-                file: file, // Store the raw File reference for upload
+                file: file,
                 isEditing: false
             };
         });
 
         setSongs(prev => [...newPlaceholders, ...prev]);
 
-        // Parse each file asynchronously
         newPlaceholders.forEach(async (placeholder, index) => {
             const file = audioFiles[index];
             try {
@@ -215,7 +209,7 @@ const Upload = () => {
                 }
                 formData.append('duration', duration);
 
-                const res = await fetch(`/api/songs/upload`, {
+                const res = await fetch(buildApiUrl('/api/songs/upload'), {
                     method: 'POST',
                     body: formData,
                 });
@@ -503,14 +497,14 @@ const Upload = () => {
                                             {song.status === 'uploading' ? (
                                                 <span className="status-badge uploading">Uploading…</span>
                                             ) : song.status === 'uploaded' ? (
-                                                <span className="status-badge uploaded">✓ Uploaded</span>
+                                                <span className="status-badge uploaded"> Uploaded</span>
                                             ) : song.status === 'upload-error' ? (
-                                                <span className="status-badge upload-error" title={song.error}>⚠ Upload Failed</span>
+                                                <span className="status-badge upload-error" title={song.error}>Upload Failed</span>
                                             ) : isPerfect ? (
-                                                <span className="status-badge perfect">✓ All Metadata</span>
+                                                <span className="status-badge perfect">All Metadata</span>
                                             ) : (
                                                 <span className="status-badge warning" title={`Missing: ${missingFields.join(', ')}`}>
-                                                    ⚠ {missingFields.length} Missing
+                                                    {missingFields.length} Missing
                                                 </span>
                                             )}
                                         </div>

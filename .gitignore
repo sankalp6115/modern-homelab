@@ -49,3 +49,4 @@ apps/paper_boy/frontend/assets/overlay/*
 !apps/paper_boy/frontend/assets/overlay/.gitkeep
 
 Dockerfile
+.env

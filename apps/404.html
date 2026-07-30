@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 // SYSTEM FAILURE</title>
+    <style>
+      /* --- CSS STYLES --- */
+      :root {
+        --bg-color: #0d0d0d;
+        --terminal-bg: #000000;
+        --text-color: #33ff00; /* Classic Terminal Green */
+        --text-glow: 0 0 10px rgba(51, 255, 0, 0.7);
+        --error-color: #ff3333;
+        --font-stack: "Courier New", Courier, monospace;
+      }
+
+      body {
+        margin: 0;
+        height: 100vh;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: var(--font-stack);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      body::after {
+        content: " ";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background:
+          linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+          linear-gradient(
+            90deg,
+            rgba(255, 0, 0, 0.06),
+            rgba(0, 255, 0, 0.02),
+            rgba(0, 0, 255, 0.06)
+          );
+        z-index: 2;
+        background-size:
+          100% 2px,
+          3px 100%;
+        pointer-events: none;
+      }
+
+      .terminal-window {
+        width: 600px;
+        max-width: 90%;
+        max-height: min(80vh, 720px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-sizing: border-box;
+        background: var(--terminal-bg);
+        border: 2px solid var(--text-color);
+        box-shadow: 0 0 20px rgba(51, 255, 0, 0.2);
+        padding: 20px;
+        position: relative;
+        z-index: 10;
+        border-radius: 8px;
+      }
+
+      .cursor {
+        display: inline-block;
+        width: 10px;
+        height: 1.2em;
+        background-color: var(--text-color);
+        animation: blink 1s step-end infinite;
+        vertical-align: bottom;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+
+      .output-line {
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+        line-height: 1.5;
+        min-height: 1.5rem;
+        text-shadow: var(--text-glow);
+        word-break: break-word;
+      }
+
+      .choice-container {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        opacity: 0; /* Hidden initially */
+        transition: opacity 1s ease-in;
+      }
+
+      .choice-link {
+        display: block;
+        width: 100%;
+        text-decoration: none;
+      }
+
+      button {
+        width: 100%;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: 1px solid var(--text-color);
+        color: var(--text-color);
+        padding: 10px 16px;
+        font-family: var(--font-stack);
+        font-size: 0.8rem;
+        cursor: pointer;
+        text-transform: uppercase;
+        box-shadow: 0 0 5px var(--text-color);
+        transition: all 0.2s;
+      }
+
+      button:hover {
+        background: var(--text-color);
+        color: #000;
+        box-shadow: 0 0 20px var(--text-color);
+      }
+
+      button.danger {
+        border-color: var(--error-color);
+        color: var(--error-color);
+        box-shadow: 0 0 5px var(--error-color);
+      }
+
+      button.danger:hover {
+        background: var(--error-color);
+        color: #000;
+        box-shadow: 0 0 20px var(--error-color);
+      }
+
+      .hidden {
+        display: none;
+      }
+      .visible {
+        opacity: 1;
+      }
+
+      .system-status {
+        position: absolute;
+        top: -30px;
+        left: 0;
+        font-size: 0.8rem;
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="terminal-window">
+      <div class="system-status">ERROR_CODE: 404_PAGE_NOT_FOUND</div>
+
+      <div id="line1" class="output-line"></div>
+      <div id="line2" class="output-line"></div>
+      <div id="line3" class="output-line"></div>
+      <div id="blame-output"></div>
+
+      <div id="choices" class="choice-container hidden">
+        <button id="btn-blame" class="danger">[ Yes, Blame Developer ]</button>
+        <a href="/" class="choice-link">
+          <button id="btn-home">[ No, Take Me Home ]</button>
+        </a>
+      </div>
+    </div>
+
+    <script>
+      const text1 =
+        "SYSTEM ALERT: The requested URL was not found on this server.";
+      const text2 =
+        "Searching database... [FAILED]. Searching cache... [FAILED].";
+      const text3 =
+        "I have looked everywhere. The page is gone. Do you want to blame the developer?";
+
+      async function typeWriter(target, text, speed = 30) {
+        let element;
+        if (typeof target === "string") {
+          element = document.getElementById(target);
+        } else {
+          element = target;
+        }
+        if (!element) {
+          console.error("typeWriter error: Target element not found");
+          return;
+        }
+
+        element.innerHTML = "";
+
+        const textNode = document.createTextNode("");
+        const cursorSpan = document.createElement("span");
+        cursorSpan.className = "cursor";
+
+        element.appendChild(textNode);
+        element.appendChild(cursorSpan);
+
+        for (let i = 0; i < text.length; i++) {
+          textNode.textContent += text.charAt(i);
+          await new Promise((r) => setTimeout(r, speed));
+        }
+
+        cursorSpan.remove();
+      }
+
+      async function runSequence() {
+        await typeWriter("line1", text1, 20);
+        await new Promise((r) => setTimeout(r, 300));
+
+        await typeWriter("line2", text2, 20);
+        await new Promise((r) => setTimeout(r, 500));
+
+        await typeWriter("line3", text3, 30);
+
+        const cursor = document.createElement("span");
+        cursor.className = "cursor";
+        document.getElementById("line3").appendChild(cursor);
+
+        const choices = document.getElementById("choices");
+        choices.classList.remove("hidden");
+        setTimeout(() => choices.classList.add("visible"), 50);
+      }
+
+      runSequence();
+
+      const blameBtn = document.getElementById("btn-blame");
+      const line3 = document.getElementById("line3");
+      const blameOutput = document.getElementById("blame-output");
+
+      blameBtn.addEventListener("click", async () => {
+        blameBtn.disabled = true;
+        blameBtn.innerText = "[ ACCESSING EXCUSE DB... ]";
+
+        try {
+          const response = await fetch("http://localhost:3001/no");
+
+          if (!response.ok) throw new Error("API Failure");
+
+          const data = await response.json();
+          console.log(data)
+          const excuse =
+            data.reason ||
+            data.excuse ||
+            "The developer is currently under a desk crying.";
+
+          blameOutput.innerHTML = "";
+          const newLine = document.createElement("div");
+          newLine.className = "output-line";
+          newLine.style.color = "#ff3333";
+          blameOutput.appendChild(newLine);
+
+          await typeWriter(newLine, `DEV_REPLY: "${excuse}"`, 20);
+        } catch (error) {
+          blameOutput.innerHTML = "";
+          const fallbackLine = document.createElement("div");
+          fallbackLine.className = "output-line";
+          fallbackLine.style.color = "#ff3333";
+          blameOutput.appendChild(fallbackLine);
+
+          await typeWriter(
+            fallbackLine,
+            `DEV_REPLY: "I broke the API too. Sorry."`,
+            20,
+          );
+        }
+
+        blameBtn.innerText = "[ BLAME AGAIN ]";
+        blameBtn.disabled = false;
+      });
+    </script>
+  </body>
+</html>

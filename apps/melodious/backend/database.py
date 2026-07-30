@@ -29,12 +29,6 @@ def init_db():
     )
     """)
 
-    # Migration: add column is_favorite to existing databases
-    try:
-        cursor.execute("ALTER TABLE songs ADD COLUMN is_favorite INTEGER DEFAULT 0")
-    except sqlite3.OperationalError:
-        pass  # Already exists
-
     # -------- ARTISTS --------
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS artists (
@@ -87,3 +81,4 @@ def init_db():
 
     conn.commit()
     conn.close()
+

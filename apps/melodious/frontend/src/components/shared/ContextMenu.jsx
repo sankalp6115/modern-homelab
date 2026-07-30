@@ -1,5 +1,6 @@
 import React, { use, useState, useEffect } from 'react';
 import { PlayerContext } from '../../contexts/PlayerContext';
+import { buildApiUrl } from '../../utils/api';
 import "../../styles/ContextMenu.css";
 
 const ContextMenu = () => {
@@ -91,7 +92,7 @@ const ContextMenu = () => {
         const songId = menuData.song.id;
 
         try {
-            const res = await fetch(`/api/songs/${songId}/favorite`, {
+            const res = await fetch(buildApiUrl(`/api/songs/${songId}/favorite`), {
                 method: 'POST'
             });
             if (!res.ok) throw new Error("Failed to toggle favorite");
@@ -111,7 +112,7 @@ const ContextMenu = () => {
         formData.append("song_id", songId);
 
         try {
-            const res = await fetch(`/api/playlists/${playlistId}/songs`, {
+            const res = await fetch(buildApiUrl(`/api/playlists/${playlistId}/songs`), {
                 method: 'POST',
                 body: formData
             });
@@ -135,7 +136,7 @@ const ContextMenu = () => {
         const playlistId = menuData.inPlaylistId;
 
         try {
-            const res = await fetch(`/api/playlists/${playlistId}/songs/${songId}`, {
+            const res = await fetch(buildApiUrl(`/api/playlists/${playlistId}/songs/${songId}`), {
                 method: 'DELETE'
             });
             if (!res.ok) throw new Error("Failed to remove song from playlist");
@@ -158,7 +159,7 @@ const ContextMenu = () => {
         }
 
         try {
-            const res = await fetch(`/api/playlists/${playlistId}`, {
+            const res = await fetch(buildApiUrl(`/api/playlists/${playlistId}`), {
                 method: 'DELETE'
             });
             if (!res.ok) throw new Error("Failed to delete playlist");
@@ -189,7 +190,7 @@ const ContextMenu = () => {
         if (!song) return;
 
         try {
-            const res = await fetch(`/api/songs/${song.id}`, {
+            const res = await fetch(buildApiUrl(`/api/songs/${song.id}`), {
                 method: 'DELETE'
             });
             if (!res.ok) throw new Error("Failed to delete song from library");

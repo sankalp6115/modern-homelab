@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/artists.css';
 import { getAssetUrl } from '../utils/assets';
+import { buildApiUrl } from '../utils/api';
 
 const Artists = () => {
     const [artists, setArtists] = useState([]);
 
     useEffect(() => {
-        fetch(`/api/artists`)
+        fetch(buildApiUrl('/api/artists'))
             .then(res => res.json())
             .then(data => setArtists(data))
             .catch(err => console.error("Failed to fetch artists:", err));

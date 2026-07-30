@@ -2,6 +2,7 @@ import React, { useEffect, useState, use, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { PlayerContext } from '../contexts/PlayerContext';
 import { getAssetUrl } from '../utils/assets';
+import { buildApiUrl } from '../utils/api';
 import '../styles/playlist-detail.css';
 
 
@@ -15,12 +16,12 @@ const PlaylistDetail = () => {
     const highlightRef = useRef(null);
 
     const fetchPlaylistDetails = React.useCallback(() => {
-        fetch(`/api/playlists/${id}`)
+        fetch(buildApiUrl(`/api/playlists/${id}`))
             .then(res => res.json())
             .then(data => {
                 const sanitizedSongs = data.songs.map(song => ({
                     ...song,
-                    file: `/api/songs/stream/${encodeURIComponent(song.file)}`,
+                    file: buildApiUrl(`/api/songs/stream/${encodeURIComponent(song.file)}`),
                     albumArt: getAssetUrl(song.albumArt),
                     artists: Array.isArray(song.artists) ? song.artists : [song.artists]
                 }));

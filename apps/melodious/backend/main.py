@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 
 from utils.path_resolver import get_assets_dir
 
-from api import songs, playlists, artists, lyrics, debug
+from api import songs, playlists, artists, lyrics, debug, wallpaper
 from database import init_db
 import uvicorn
 from pathlib import Path
@@ -35,6 +35,7 @@ app.include_router(playlists.router, prefix="/api/playlists", tags=["Playlists"]
 app.include_router(artists.router, prefix="/api/artists", tags=["Artists"])
 app.include_router(lyrics.router, prefix="/api/lyrics", tags=["Lyrics"])
 app.include_router(debug.router, prefix="/api/debug", tags=["Debug"])
+app.include_router(wallpaper.router, prefix="/api/wallpaper", tags=["Wallpapers"])
 
 # ---------------- Health ----------------
 @app.get("/{full_path:path}")

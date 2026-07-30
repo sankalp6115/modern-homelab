@@ -44,6 +44,9 @@ const Sidebar = ({ isOpen, onClose }) => {
         <NavLink viewTransition className="left-menu-option" to="/upload" onClick={onClose}>
           <img src="/assets/images/ui/upload.png" alt="ui" /> Upload
         </NavLink>
+        <NavLink viewTransition className="left-menu-option" to="/settings" onClick={onClose}>
+          <img src="/assets/images/ui/settings.png" alt="ui" /> Settings
+        </NavLink>
       </section>
     </>
   );

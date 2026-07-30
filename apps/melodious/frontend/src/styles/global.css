@@ -13,6 +13,7 @@
   --gap: clamp(10px, 1.5vw, 20px);
   --control-button-accent: #a8e1d0;
   --login-accent: #ffffff;
+  --app-wallpaper: url(/assets/images/backgrounds/BG2.jpg);
 }
 
 /* ── Reset ──────────────────────────────────────────────────────── */
@@ -26,7 +27,7 @@
 }
 
 body {
-  background-image: url(/assets/images/backgrounds/BG2.jpg);
+  background-image: var(--app-wallpaper);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -36,6 +37,7 @@ body {
   padding: 0;
   overflow: hidden;
   height: 100vh;
+  transition: 0.5s ease;
 }
 
 /* ── Scrollbars ─────────────────────────────────────────────────── */
@@ -497,6 +499,7 @@ img#rightAlbumArt {
   aspect-ratio: 1;
   border-radius: 50px;
   corner-shape: squircle;
+  object-fit: cover;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

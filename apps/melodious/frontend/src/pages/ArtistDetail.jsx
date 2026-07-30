@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { PlayerContext } from '../contexts/PlayerContext';
 import '../styles/artists.css';
 import { getAssetUrl } from '../utils/assets';
+import { buildApiUrl } from '../utils/api';
 
 
 const ArtistDetail = () => {
@@ -15,12 +16,12 @@ const ArtistDetail = () => {
     const fileInputRef = useRef(null);
 
     useEffect(() => {
-        fetch(`/api/artists/${id}`)
+        fetch(buildApiUrl(`/api/artists/${id}`))
             .then(res => res.json())
             .then(data => {
                 const sanitizedSongs = data.songs.map(song => ({
                     ...song,
-                    file: `/api/songs/stream/${encodeURIComponent(song.file)}`,
+                    file: buildApiUrl(`/api/songs/stream/${encodeURIComponent(song.file)}`),
                     albumArt: getAssetUrl(song.albumArt),
                     artists: Array.isArray(song.artists) ? song.artists : [song.artists]
                 }));
@@ -49,7 +50,7 @@ const ArtistDetail = () => {
         formData.append('file', file);
 
         try {
-            const response = await fetch(`/api/artists/${id}/image`, {
+            const response = await fetch(buildApiUrl(`/api/artists/${id}/image`), {
                 method: 'POST',
                 body: formData,
             });

@@ -1,18 +1,11 @@
-import os
 import json
-import sqlite3
-import hashlib
 import argparse
 from pathlib import Path
 from mutagen.mp3 import MP3
 from mutagen.id3 import ID3, APIC, TIT2, TPE1, TALB, TYER, TCON, USLT
-import platform
 import random
-import os
-import re
-
-# Import path helpers
 import sys
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR / "backend"))
 
@@ -29,14 +22,8 @@ ALBUM_ARTS_DIR = ASSETS_DIR / "album-arts"
 FALLBACK_ARTS_DIR = ALBUM_ARTS_DIR / "fallback"
 ARTIST_IMAGES_DIR = ASSETS_DIR / "artist-images"
 
-# Fallback arts array
 global fallback_art_arr
-fallback_art_arr = [f for f in os.listdir(FALLBACK_ARTS_DIR) if f.endswith("png")]
-
-# Ensure directories exist
-ALBUM_ARTS_DIR.mkdir(parents=True, exist_ok=True)
-
-# -------------------- HELPERS --------------------
+fallback_art_arr = [f.name for f in FALLBACK_ARTS_DIR.iterdir() if f.suffix.lower()==".png"]
 
 def split_artists(artist_string):
     """Split joint artist strings into a list of unique names."""
@@ -46,11 +33,11 @@ def split_artists(artist_string):
         artist_string = artist_string.replace(sep, "|")
     return [a.strip() for a in artist_string.split("|") if a.strip()]
 
-def fallback_art():
+def fallback_album_art():
     if not fallback_art_arr:
-        return "assets/album-arts/default.jpg"
+        return f"{FALLBACK_ARTS_DIR}/song-icon4.png"
     filename = random.choice(fallback_art_arr)
-    return f"assets/album-arts/fallback/{filename}"
+    return f"{FALLBACK_ARTS_DIR}/{filename}"
 
 def extract_metadata(file_path):
     """Extract metadata and album art from various audio formats (MP3, FLAC, OGG, WAV, M4A)."""
@@ -166,7 +153,6 @@ def extract_metadata(file_path):
             else:
                 return None
         
-        # Album Art extraction (use stem to avoid issues with extra dots)
         art_filename = f"{Path(file_path).stem}.jpg"
         art_path = ALBUM_ARTS_DIR / art_filename
         
@@ -174,7 +160,6 @@ def extract_metadata(file_path):
             with open(art_path, "wb") as img:
                 img.write(art_data)
         
-        # Use relative path as the stable identifier
         rel_path = file_path.relative_to(SONGS_DIR).as_posix()
         
         return {
@@ -185,7 +170,7 @@ def extract_metadata(file_path):
             "year": year,
             "length": duration,
             "file": rel_path,
-            "albumArt": f"assets/album-arts/{art_filename}" if art_path.exists() else fallback_art()
+            "albumArt": f"assets/album-arts/{art_filename}" if art_path.exists() else fallback_album_art()
         }
     except Exception as e:
         print(f"Error extracting {file_path.name}: {e}")
@@ -211,16 +196,14 @@ def reset_database():
     init_db()
     print("Database schema initialized.")
 
-# -------------------- CORE LOGIC --------------------
 
 def sync(reset=False, cleanup=False):
-    print(f"🚀 Starting Advanced Library Sync...")
-    print(f"📁 Songs Dir: {SONGS_DIR}")
+    print(f"Starting Advanced Library Sync...")
+    print(f"Songs Dir: {SONGS_DIR}")
     
     if reset:
         reset_database()
     
-    # 1. Load Existing Data
     songs_json_path = DATA_DIR / "songs.json"
     artists_json_path = DATA_DIR / "artists.json"
     lyrics_json_path = DATA_DIR / "lyrics.json"
@@ -241,23 +224,19 @@ def sync(reset=False, cleanup=False):
         with open(lyrics_json_path, "r", encoding="utf-8") as f:
             existing_lyrics = json.load(f)
 
-    # Use relative path as lookup to preserve IDs
     song_lookup = {s["file"]: s for s in existing_songs}
     max_id = max([s["id"] for s in existing_songs], default=0)
     
     new_songs = []
     all_artists = set()
     
-    # 2. Recursive Filesystem Scan
     supported_extensions = {".mp3", ".flac", ".ogg", ".wav", ".m4a", ".mp4"}
     files = [p for p in SONGS_DIR.rglob("*") if p.is_file() and p.suffix.lower() in supported_extensions]
-    # Sort files to ensure deterministic sync order
     files.sort(key=lambda x: x.name.lower())
     print(f"Found {len(files)} audio files recursively.")
     
     valid_files = set()
     for i, file_path in enumerate(files):
-        # Skip lyrics folder if it's inside songs
         if "lyrics" in file_path.parts:
             continue
             
@@ -270,7 +249,6 @@ def sync(reset=False, cleanup=False):
         if not metadata:
             continue
             
-        # Maintain stable ID
         if rel_path in song_lookup:
             metadata["id"] = song_lookup[rel_path]["id"]
             metadata["rating"] = song_lookup[rel_path].get("rating", 0)
@@ -278,7 +256,7 @@ def sync(reset=False, cleanup=False):
             max_id += 1
             metadata["id"] = max_id
             metadata["rating"] = 0
-            print(f"\n  ✨ New song detected: {metadata['title']} ({rel_path})")
+            print(f"\nNew song detected: {metadata['title']} ({rel_path})")
             
         new_songs.append(metadata)
         for a in metadata["artist"]:
@@ -288,11 +266,10 @@ def sync(reset=False, cleanup=False):
         original_count = len(new_songs)
         new_songs = [s for s in new_songs if s["file"] in valid_files]
         if len(new_songs) < original_count:
-            print(f"\n🧹 Cleaned up {original_count - len(new_songs)} stale entries.")
+            print(f"\nCleaned up {original_count - len(new_songs)} stale entries.")
 
     print(f"\nFinal Count: {len(new_songs)} songs.")
 
-    # 3. Process Artists
     artist_lookup = {a["name"]: a for a in existing_artists}
     final_artists = []
     
@@ -301,7 +278,6 @@ def sync(reset=False, cleanup=False):
         
         has_valid_image = False
         
-        # If an image path already exists in JSON, check if the file exists on disk
         if artist_obj.get("image"):
             # Extract just the filename to find it in ARTIST_IMAGES_DIR
             img_filename = Path(artist_obj["image"]).name
@@ -309,7 +285,6 @@ def sync(reset=False, cleanup=False):
                 artist_obj["image"] = f"/artist-images/{img_filename}"
                 has_valid_image = True
         
-        # If no valid image is found, search disk for lowercase matching extensions
         if not has_valid_image:
             found_image = False
             for ext in [".jpg", ".png", ".webp", ".jpeg"]:
@@ -324,7 +299,6 @@ def sync(reset=False, cleanup=False):
         
         final_artists.append(artist_obj)
         
-    # 4. Process Lyrics
     lyrics_lookup = {l["song_id"]: l for l in existing_lyrics}
     final_lyrics = []
     lrc_files = {f.stem: f for f in LYRICS_DIR.rglob("*.lrc")}
@@ -340,11 +314,10 @@ def sync(reset=False, cleanup=False):
                     content = f.read()
                     final_lyrics.append({"song_id": song_id, "lyrics": content.strip()})
             except Exception as e:
-                print(f"  ⚠ Error reading lyrics for {song_stem}: {e}")
+                print(f"Error reading lyrics for {song_stem}: {e}")
         elif song_id in lyrics_lookup:
             final_lyrics.append(lyrics_lookup[song_id])
 
-    # 5. Save JSONs
     with open(songs_json_path, "w", encoding="utf-8") as f:
         json.dump(new_songs, f, indent=2, ensure_ascii=False)
     with open(artists_json_path, "w", encoding="utf-8") as f:
@@ -354,18 +327,13 @@ def sync(reset=False, cleanup=False):
         
     print(f"JSON files updated.")
 
-    # 6. Database Sync
     print(f"Syncing with Database...")
     conn = get_connection()
     cursor = conn.cursor()
     
     try:
-        # Clear existing relations if we are doing a full sync without reset
         if not reset:
-             # Be selective: only delete those we are about to re-insert or solve orphans
              pass
-
-        # Update Songs
         for s in new_songs:
             cursor.execute("""
                 INSERT OR REPLACE INTO songs (id, title, album, genre, year, duration, file_path, album_art, rating)
@@ -374,7 +342,6 @@ def sync(reset=False, cleanup=False):
                 s["id"], s["title"], s["album"], s["genre"], s["year"], s["length"], s["file"], s["albumArt"], s.get("rating", 0)
             ))
             
-        # Update Artists
         artist_id_map = {}
         for a in final_artists:
             cursor.execute("""
@@ -384,7 +351,6 @@ def sync(reset=False, cleanup=False):
             cursor.execute("SELECT id FROM artists WHERE name = ?", (a["name"],))
             artist_id_map[a["name"]] = cursor.fetchone()[0]
             
-        # Update Song-Artists linkages
         for s in new_songs:
             cursor.execute("DELETE FROM song_artists WHERE song_id = ?", (s["id"],))
             for artist_name in s["artist"]:
@@ -392,20 +358,17 @@ def sync(reset=False, cleanup=False):
                 if artist_id:
                     cursor.execute("INSERT OR IGNORE INTO song_artists (song_id, artist_id) VALUES (?, ?)", (s["id"], artist_id))
 
-        # Update Lyrics
         for l in final_lyrics:
             cursor.execute("""
                 INSERT OR REPLACE INTO lyrics (song_id, content)
                 VALUES (?, ?)
             """, (l["song_id"], l["lyrics"]))
             
-        # 7. Playlist Synchronization
         if playlists_json_path.exists():
-            print("📜 Syncing Playlists...")
+            print("Syncing Playlists...")
             with open(playlists_json_path, "r", encoding="utf-8") as f:
                 playlists = json.load(f)
             
-            # Match by name to keep IDs stable if possible
             for p in playlists:
                 cursor.execute("INSERT OR IGNORE INTO playlists (name, poster) VALUES (?, ?)", (p["name"], p.get("poster")))
                 cursor.execute("UPDATE playlists SET poster = ? WHERE name = ?", (p.get("poster"), p["name"]))

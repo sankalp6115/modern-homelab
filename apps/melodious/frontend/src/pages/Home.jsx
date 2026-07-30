@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PlayerContext } from '../contexts/PlayerContext';
 import { getAssetUrl } from '../utils/assets';
+import { buildApiUrl } from '../utils/api';
 import '../styles/home.css';
 
 const Home = () => {
@@ -71,7 +72,7 @@ const Home = () => {
     }
 
     try {
-      const response = await fetch(`/api/playlists/`, {
+      const response = await fetch(buildApiUrl('/api/playlists/'), {
         method: "POST",
         body: formData,
       });

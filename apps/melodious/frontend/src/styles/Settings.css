@@ -5,6 +5,7 @@
 .settings-page {
   padding: 40px 36px;
   margin: 0 auto;
+  width: 100%;
   position: relative;
   background-color: rgba(0, 38, 255, 0.255);
   border-radius: 10px;
@@ -24,8 +25,6 @@
 /* ── Setting cards ── */
 .setting-card {
   background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 16px;
   padding: 22px 24px;
@@ -98,6 +97,7 @@
   font-weight: 400;
   outline: none;
   transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  margin-left: 10px;
 }
 
 .setting-input::placeholder {
@@ -186,4 +186,29 @@
   text-decoration: underline;
   text-decoration-color: rgba(100, 190, 255, 0.4);
   text-underline-offset: 2px;
+}
+
+/* wallpaper-slider */
+.setting-slider{
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+    gap: 10px;
+    padding: 10px;
+}
+.setting-wallpaper{
+  height: 150px;
+  transition: 0.15s;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  object-fit: cover;
+}
+
+.setting-wallpaper:hover{
+  scale: 1.05;
+}
+
+.setting-wallpaper.active-wallpaper{
+  border-color: #5ea7ff;
+  box-shadow: 0 0 0 2px rgba(94, 167, 255, 0.35);
 }

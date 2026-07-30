@@ -1,8 +1,52 @@
-In my first year of college, I built a music player and called Melodious as a student project. I polished it for a whole semester, then abandoned it - which is honestly what happens to most student projects.
-An assignment in the fourth semester got me back into it. We were working with virtual machines and linux and it opened up this whole idea of self-hosting - running your own software, on your own hardware, your way. 
-I decided to actually finish what I started. I rebuilt the whole thing. I ported the whole stack into React frontend, FastAPI backend and SQLite database. I opted for a clean client-server architecture. SQLite felt right for a personal single-user app - simple, low overhead, easy to swap later when scalability becomes necessary.
-The server is an old laptop on which i booted Alpine Linux sitting in my room. Everything on my home network can access it.
-I use it every day now. More than 300 tracks, no ads, no platform deciding what gets recommended to me. I also built a custom shuffle that generates a full session queue so nothing repeats and nothing gets quietly buried - which was a specific frustration I had with every streaming app I've used.
-The operational side has been the real learning curve. Deployments are still manual right now. I'm working toward CI/CD, Docker, and secure-tunneling to make the system accessible outside the network.
-There's something different about maintaining software you depend on versus submitting it for a grade.
-Open to feedback and suggestions—especially on how this could be made more robust and scalable.
+I thought I had finished my music player project.
+
+Turns out, I had only finished writing the code.
+
+Like many engineering students, I built a music player as a semester project using HTML, CSS and JavaScript. It supported media controls, playlists, shuffle, repeat, volume control, voice commands, a polished UI, and even a tiny Oneko cat that chased your cursor around the screen. I spent an entire semester refining every little detail because I originally wanted to use it myself.
+
+But there was one problem.
+
+After the project ended, it just sat in a GitHub repository.
+
+A web application isn't truly useful if it only works while your development laptop is running. Apps like Spotify and YouTube Music feel effortless because they're always available. Mine wasn't.
+
+Then, during my fourth semester, our professor assigned us to build a distributed CRUD application using Linux virtual machines and networking. We had to make multiple machines communicate over a LAN.
+
+That assignment completely changed the way I thought about software.
+
+Instead of stopping after submitting it, I kept exploring Linux, networking, Docker, reverse proxies, virtual machines, VPNs, and deployment. Somewhere along the way, I discovered something called a **homelab**.
+
+I had an old laptop collecting dust.
+
+So I installed Alpine Linux, deployed my music player on it, and turned it into my own server.
+
+Now, whenever both devices are on the same network, I simply open my browser, visit my server, and start listening to music.
+
+No IDE.
+No local development server.
+No "npm start."
+
+Just my own application, running independently.
+
+What started as a college project has become the music app I actually use every day. It has genuinely replaced Spotify for my personal listening.
+
+More importantly, this project taught me lessons that no classroom assignment could:
+
+• Linux command line and system administration
+• IP networking fundamentals
+• Deployment and self-hosting
+• Docker and containers
+• Reverse proxies
+• Mesh VPNs
+• Virtual machines
+• And most importantly, the confidence to build and run my own infrastructure instead of depending entirely on someone else's.
+
+Looking back, the most valuable thing I built wasn't the music player.
+
+It was the environment that brought it to life.
+
+Sometimes a project isn't finished when the code works.
+
+It's finished when you actually use it.
+
+#Linux #SelfHosting #HomeLab #Docker #Networking #WebDevelopment #JavaScript #EngineeringStudent #BuildInPublic
