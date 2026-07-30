@@ -35,6 +35,9 @@ apps/melodious/assets/lyrics/*
 apps/melodious/assets/data/*
 ~apps/melodious/assets/data/.gitkeep
 
+apps/melodious/assets/wallpaper/*
+~apps/melodious/assets/wallpaper/.gitkeep
+
 # paper boy
 apps/paper_boy/frontend/assets/video/*
 !apps/paper_boy/frontend/assets/video/.gitkeep
