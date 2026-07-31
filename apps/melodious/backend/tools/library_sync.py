@@ -23,7 +23,10 @@ FALLBACK_ARTS_DIR = ALBUM_ARTS_DIR / "fallback"
 ARTIST_IMAGES_DIR = ASSETS_DIR / "artist-images"
 
 global fallback_art_arr
-fallback_art_arr = [f.name for f in FALLBACK_ARTS_DIR.iterdir() if f.suffix.lower()==".png"]
+if FALLBACK_ARTS_DIR.exists() and FALLBACK_ARTS_DIR.is_dir():
+    fallback_art_arr = [f.name for f in FALLBACK_ARTS_DIR.iterdir() if f.suffix.lower()==".png"]
+else:
+    fallback_art_arr = []
 
 def split_artists(artist_string):
     """Split joint artist strings into a list of unique names."""
@@ -35,9 +38,9 @@ def split_artists(artist_string):
 
 def fallback_album_art():
     if not fallback_art_arr:
-        return f"{FALLBACK_ARTS_DIR}/song-icon4.png"
+        return "assets/album-arts/fallback/song-icon4.png"
     filename = random.choice(fallback_art_arr)
-    return f"{FALLBACK_ARTS_DIR}/{filename}"
+    return f"assets/album-arts/fallback/{filename}"
 
 def extract_metadata(file_path):
     """Extract metadata and album art from various audio formats (MP3, FLAC, OGG, WAV, M4A)."""

@@ -5,6 +5,7 @@ import shutil
 import re
 import unicodedata
 import urllib.parse
+import random
 from pathlib import Path
 
 from database import get_connection
@@ -262,6 +263,19 @@ async def upload_song(
             if target_song_path.exists():
                 target_song_path.unlink()
             raise HTTPException(status_code=500, detail=f"Failed to save cover art: {str(e)}")
+    else:
+        # Pick a random image from the album-arts/fallback directory
+        assets_dir = get_assets_dir()
+        fallback_dir = assets_dir / "album-arts" / "fallback"
+        if fallback_dir.exists() and fallback_dir.is_dir():
+            files = [f for f in os.listdir(fallback_dir) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))]
+            if files:
+                random_file = random.choice(files)
+                album_art_path_db = f"assets/album-arts/fallback/{random_file}"
+            else:
+                album_art_path_db = "assets/album-arts/fallback/song-icon4.png"
+        else:
+            album_art_path_db = "assets/album-arts/fallback/song-icon4.png"
             
     # Insert metadata into SQLite database
     conn = get_connection()

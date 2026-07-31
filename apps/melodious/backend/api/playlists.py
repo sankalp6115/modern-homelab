@@ -107,9 +107,9 @@ async def create_playlist(
                 random_file = random.choice(files)
                 poster_path_db = f"playlist-posters/fallback/{random_file}"
             else:
-                poster_path_db = "playlist-posters/fallback/playlist-poster1.jpg"
+                poster_path_db = "playlist-posters/fallback/playlist-poster1.jpeg"
         else:
-            poster_path_db = "playlist-posters/fallback/playlist-poster1.jpg"
+            poster_path_db = "playlist-posters/fallback/playlist-poster1.jpeg"
             
     conn = get_connection()
     cursor = conn.cursor()
