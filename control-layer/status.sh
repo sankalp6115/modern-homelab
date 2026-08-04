@@ -22,7 +22,7 @@ found && /^\s*inet / {
     exit
 }')
 
-CPU_LEVEL=$(top -n1 2>/dev/null | grep -oP "System \K\d+" || echo "?")
+CPU_LEVEL=$(top -n 1 2>/dev/null | grep -oP "System \K\d+" || echo "?")
 
 OPEN_PORTS=$(netstat -tln 2>/dev/null | awk '/LISTEN/ {split($4, a, ":"); print a[length(a)]}' | sort -un)
 
