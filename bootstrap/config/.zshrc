@@ -1,5 +1,5 @@
 eval "$(starship init zsh)"
-eval "$(zoxide init zsh)"
+eval "$(zoxide init zsh --cmd cd)"
 
 alias python='python3.11'
 alias pip='pip3.11'
