@@ -2,10 +2,13 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 import requests
 
-PAT = os.environ["GITHUB_PAT"]
+PAT = os.environ.get("GITHUB_PAT")
 
 BASE_DIR = Path(r"C:\Users\ujjwa\Desktop\som\termux-bootstrap\github-backup")
 REPOS_DIR = BASE_DIR / "repos"
