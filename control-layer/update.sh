@@ -1,0 +1,1 @@
+cd homelab && git pull
