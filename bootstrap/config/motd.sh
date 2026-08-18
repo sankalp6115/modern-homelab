@@ -27,7 +27,7 @@ echo
 echo "$(run_script "$CONFIG_ROOT/startup/interface.sh")"
 echo
 echo "$(run_script "$CONFIG_ROOT/startup/storage_management.sh")"
-echo
-echo "$(run_script "$CONFIG_ROOT/startup/weather.sh")"
+# echo
+# echo "$(run_script "$CONFIG_ROOT/startup/weather.sh")"
 echo
 echo "$(date)"
