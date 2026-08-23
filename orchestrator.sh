@@ -14,13 +14,13 @@ mkdir -p "$SYSTEM_SCRIPTS/github-backup"
 # ─── Add system-scripts to PATH in .bashrc (idempotent) ──────────────────────
 
 BASHRC="$HOME/.bashrc"
-PATH_LINE="export PATH=\"\$HOME/system-scripts/control-layer:\$PATH\""
+PATH_LINE="export PATH=\"\$HOME/system_scripts/control-layer:\$PATH\""
 
-if ! grep -qF "system-scripts/control-layer" "$BASHRC" 2>/dev/null; then
+if ! grep -qF "system_scripts/control-layer" "$BASHRC" 2>/dev/null; then
     echo "" >> "$BASHRC"
     echo "# homelab system scripts" >> "$BASHRC"
     echo "$PATH_LINE" >> "$BASHRC"
-    echo "✓ Added system-scripts/control-layer to PATH in .bashrc"
+    echo "✓ Added system_scripts/control-layer to PATH in .bashrc"
 else
     echo "· PATH already set in .bashrc, skipping"
 fi
