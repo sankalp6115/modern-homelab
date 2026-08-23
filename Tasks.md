@@ -11,9 +11,9 @@ integrated command to perform multiple tasks
 - wifi
 - ssh-banner
 - music-sync -> gets changes from rclone, if approved, fetches everything, sync using library_sync.py
-app-up
-deploy
-backup - gh backup, songs backup
+- app-up
+- deploy
+- backup - gh backup, songs backup
 clean
 healthcheck
 doctor

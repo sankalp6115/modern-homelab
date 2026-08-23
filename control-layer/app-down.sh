@@ -1,13 +1,8 @@
-
+#!/usr/bin/env bash
 HOME_DIR=$HOME
 HOMELAB_DIR="$HOME_DIR/homelab/apps"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PORT_MAP="$SCRIPT_DIR/app-port-map.ini"
-
-# Plan
-# app-up melodious (if down then up, else say already up)
-# app-down melodious (if up then down, else say not running)
-# app-up-down melodious (if up, then down then again up | if down, then up)
 
 APP_NAME="$1"
 
@@ -26,7 +21,6 @@ fi
 
 echo "Stopping $APP_NAME (port $PORT)..."
 
-# pgrep may not be available; fall back to ps + grep
 if command -v pgrep &>/dev/null; then
     pids="$(pgrep -f "main.py --port $PORT")"
 else
