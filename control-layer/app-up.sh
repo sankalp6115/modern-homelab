@@ -4,6 +4,21 @@ HOMELAB_DIR="$HOME_DIR/homelab/apps"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PORT_MAP="$SCRIPT_DIR/app-port-map.ini"
 
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo ""
+    echo "Usage: homelab app-up <app-name>"
+    echo ""
+    echo "Starts a homelab app by name."
+    echo "  · Looks up the app's port from app-port-map.ini"
+    echo "  · Checks if the app is already running (skips if so)"
+    echo "  · Runs the app's start.sh script from ~/homelab/apps/<app-name>/"
+    echo ""
+    echo "Example:"
+    echo "  homelab app-up melodious"
+    echo ""
+    exit 0
+fi
+
 # Plan
 # app-up melodious   → if down then up, else say already up
 # app-down melodious → if up then down, else say not running
@@ -11,7 +26,7 @@ PORT_MAP="$SCRIPT_DIR/app-port-map.ini"
 APP_NAME="$1"
 
 if [[ -z "$APP_NAME" ]]; then
-    echo "Usage: app-up.sh <app-name>"
+    echo "Usage: homelab app-up <app-name>"
     exit 1
 fi
 

@@ -1,5 +1,20 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo ""
+    echo "Usage: homelab battery"
+    echo ""
+    echo "Shows detailed battery information from termux-battery-status:"
+    echo "  · Present, technology, health"
+    echo "  · Plugged status and charging state"
+    echo "  · Temperature, voltage, current draw"
+    echo "  · Battery percentage"
+    echo ""
+    echo "Requires: termux-api package"
+    echo ""
+    exit 0
+fi
+
 BATTERY_INFO="$(termux-battery-status)"
 
 PRESENT="$(echo "$BATTERY_INFO" | jq -r '.present')"

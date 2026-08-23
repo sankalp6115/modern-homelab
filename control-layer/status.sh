@@ -1,4 +1,18 @@
 #!/data/data/com.termux/files/usr/bin/bash
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo ""
+    echo "Usage: homelab status"
+    echo ""
+    echo "Shows a full system overview including:"
+    echo "  · Hostname, uptime, CPU usage, RAM, storage, battery, temperature"
+    echo "  · Status of key services (sshd, tailscaled, syncthing, tmux)"
+    echo "  · Network info: WiFi IP and Tailscale IP"
+    echo "  · All currently open/listening TCP ports"
+    echo ""
+    exit 0
+fi
+
 HOSTNAME="$(hostname)"
 
 UPTIME_RAW="$(uptime -p 2>/dev/null | sed 's/up //')"
@@ -21,7 +35,7 @@ found && /^\s*inet / {
 
 CPU_LEVEL=$(top -n 1 2>/dev/null | grep -oP "System \K\d+" || echo "?")
 
-OPEN_PORTS=$(netstat -tln 2>/dev/null | awk '/LISTEN/ {split($4, a, ":"); print a[length(a)]}' | sort -un)
+OPEN_PORTS=$(ps aux | grep -E "[p]ython.*--port" | grep -oP '\-\-port\s+\K[0-9]+' | sort -un)
 
 BATTERY_JSON="$(termux-battery-status 2>/dev/null)"
 BAT_PCT=$(echo "$BATTERY_JSON" | jq -r '.percentage // "?"')

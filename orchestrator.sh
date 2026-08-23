@@ -32,11 +32,29 @@ echo "Installing control-layer commands → $DEST_CONTROL"
 
 for script in "$REPO_DIR/control-layer/"*.sh; do
     [ -f "$script" ] || continue
-    filename="$(basename "$script" .sh)"   # strip .sh extension
-    dest="$DEST_CONTROL/$filename"
+    base="$(basename "$script" .sh)"
+    if [[ "$base" == "homelab" ]]; then
+        # Install as bare 'homelab' command (no prefix)
+        dest="$DEST_CONTROL/homelab"
+    else
+        # All others get homelab- prefix
+        dest="$DEST_CONTROL/homelab-$base"
+    fi
     cp "$script" "$dest"
     chmod +x "$dest"
-    echo "  ✓ $filename"
+    echo "  ✓ $(basename $dest)"
+done
+
+# ─── Remove stale unprefixed copies (from old installs) ──────────────────────
+
+for script in "$REPO_DIR/control-layer/"*.sh; do
+    [ -f "$script" ] || continue
+    base="$(basename "$script" .sh)"
+    stale="$DEST_CONTROL/$base"
+    if [[ -f "$stale" && "$base" != "homelab" ]]; then
+        rm "$stale"
+        echo "  ✗ removed stale: $base"
+    fi
 done
 
 # ─── Copy companion files (e.g. app-port-map.ini) ────────────────────────────

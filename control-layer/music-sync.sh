@@ -2,6 +2,21 @@
 
 set -Eeuo pipefail
 
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo ""
+    echo "Usage: homelab music-sync"
+    echo ""
+    echo "Syncs songs from an rclone remote to the melodious app, then restarts it."
+    echo "  · Runs a dry-run first and shows what would change"
+    echo "  · Asks for confirmation before applying"
+    echo "  · Syncs homedrive:songs → ~/homelab/apps/melodious/assets/songs/"
+    echo "  · Runs library_sync.py to update the music database"
+    echo "  · Restarts the melodious server in a tmux session"
+    echo ""
+    echo "Requires: rclone, python3.11, tmux"
+    echo ""
+    exit 0
+fi
 APP_DIR="$HOME/homelab/apps/melodious"
 SONGS_DIR="$APP_DIR/assets/songs"
 SYNC_SCRIPT="$APP_DIR/backend/tools/library_sync.py"

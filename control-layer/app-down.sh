@@ -4,10 +4,25 @@ HOMELAB_DIR="$HOME_DIR/homelab/apps"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PORT_MAP="$SCRIPT_DIR/app-port-map.ini"
 
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo ""
+    echo "Usage: homelab app-down <app-name>"
+    echo ""
+    echo "Stops a running homelab app by name."
+    echo "  · Looks up the app's port from app-port-map.ini"
+    echo "  · Finds the running process and kills it"
+    echo "  · Reports if the app was not running"
+    echo ""
+    echo "Example:"
+    echo "  homelab app-down melodious"
+    echo ""
+    exit 0
+fi
+
 APP_NAME="$1"
 
 if [[ -z "$APP_NAME" ]]; then
-    echo "Usage: app-down.sh <app-name>"
+    echo "Usage: homelab app-down <app-name>"
     exit 1
 fi
 
