@@ -53,18 +53,25 @@ jobs:
             rm -rf "deploy_repo/apps/$app"
             mkdir -p "deploy_repo/apps/$app"
 
-            if [ -d "source/apps/apps/$app/backend" ]; then
-              mkdir -p "deploy_repo/apps/$app/backend"
-              rsync -a "source/apps/apps/$app/backend/" "deploy_repo/apps/$app/backend/"
-            fi
+            # Copy all app content (backend, assets, start.sh, data files) except raw unbuilt frontend source & heavy artifacts
+            rsync -av \
+              --exclude='frontend' \
+              --exclude='node_modules' \
+              --exclude='__pycache__' \
+              --exclude='*.pyc' \
+              --exclude='*.pyo' \
+              --exclude='.pytest_cache' \
+              --exclude='.venv' \
+              --exclude='venv' \
+              --exclude='.env*' \
+              --exclude='.DS_Store' \
+              --exclude='Thumbs.db' \
+              "source/apps/apps/$app/" "deploy_repo/apps/$app/"
 
+            # Copy built frontend dist if present
             if [ -d "source/apps/apps/$app/frontend/dist" ]; then
               mkdir -p "deploy_repo/apps/$app/frontend/dist"
               rsync -a "source/apps/apps/$app/frontend/dist/" "deploy_repo/apps/$app/frontend/dist/"
-            fi
-
-            if [ -f "source/apps/apps/$app/start.sh" ]; then
-              cp "source/apps/apps/$app/start.sh" "deploy_repo/apps/$app/start.sh"
             fi
           done
 
