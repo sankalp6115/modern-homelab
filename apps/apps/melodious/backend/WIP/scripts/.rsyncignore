@@ -1,0 +1,12 @@
+node_modules
+.env
+.vscode
+.directorymap
+.DS_Store
+.git
+__pycache__
+all_media
+downloads
+
+
+songs.db

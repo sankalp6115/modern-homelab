@@ -1,0 +1,98 @@
+/* =========================================================================
+   VOLUME CONTROL -- MODERN SLIDER
+   ========================================================================= */
+
+.volume-control-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+    width: 100%;
+    min-width: 140px;
+    max-width: 200px;
+}
+
+.mute-toggle-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.15rem;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    opacity: 0.85;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.mute-toggle-btn:hover {
+    transform: scale(1.15);
+    opacity: 1;
+}
+
+.speaker-icon-img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    display: block;
+}
+
+.volume-slider-track {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    overflow: visible; /* so thumb can overflow track height */
+    outline: none;
+    display: flex;
+    align-items: center;
+}
+
+.volume-slider-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #007bff, #00d2ff);
+    box-shadow: 0 0 8px rgba(0, 210, 255, 0.5);
+    border-radius: 10px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+}
+
+.volume-slider-thumb {
+    width: 12px;
+    height: 12px;
+    background: #ffffff;
+    border: 2px solid #00d2ff;
+    box-shadow: 0 0 6px rgba(0, 210, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: width 0.1s ease, height 0.1s ease;
+}
+
+/* Hover effects */
+.volume-slider-track:hover .volume-slider-thumb {
+    width: 14px;
+    height: 14px;
+    box-shadow: 0 0 10px rgba(0, 210, 255, 1), 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.volume-slider-track:hover .volume-slider-fill {
+    background: linear-gradient(90deg, #0056b3, #00f0ff);
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.8);
+}
+
+.volume-value-display {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    min-width: 32px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}

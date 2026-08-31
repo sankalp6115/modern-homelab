@@ -1,0 +1,692 @@
+/* =========================================================================
+   UPLOAD.CSS
+   Styles for the Metadata Inspector (Drag & Drop audio file metadata parsing)
+   ========================================================================= */
+
+.upload-page-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    padding: 10px 10px 40px 10px;
+    color: #ffffff;
+    overflow-y: auto;
+    gap: 24px;
+}
+
+/* ── Page Header ────────────────────────────────────────────────── */
+.upload-header {
+    margin-bottom: 5px;
+}
+
+.upload-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.upload-subtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.4;
+}
+
+/* ── Interactive Dropzone ────────────────────────────────────────── */
+.dropzone {
+    width: 100%;
+    height: 280px;
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    overflow: hidden;
+    outline: none;
+}
+
+.dropzone:hover,
+.dropzone:focus-visible {
+    border-color: #a8e1d0;
+    background: rgba(168, 225, 208, 0.05);
+    box-shadow: 0 0 25px rgba(168, 225, 208, 0.15);
+}
+
+.dropzone.dragover {
+    border-color: #ffd166;
+    background: rgba(255, 209, 102, 0.08);
+    box-shadow: 0 0 35px rgba(255, 209, 102, 0.25);
+    transform: scale(0.99);
+}
+
+.dropzone.compact {
+    height: 120px;
+    border-radius: 12px;
+    border-style: dashed;
+}
+
+.dropzone-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    pointer-events: none;
+    gap: 15px;
+    width: 100%;
+    padding: 20px;
+}
+
+.dropzone.compact .dropzone-content {
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px;
+}
+
+.full-text img {
+    height: 50px;
+}
+
+.full-text h3 {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.full-text p {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 15px;
+}
+
+.browse-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.dropzone:hover .browse-btn {
+    background: #a8e1d0;
+    border-color: #a8e1d0;
+    color: #121212;
+}
+
+.compact-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.compact-text .highlight-text {
+    color: #a8e1d0;
+    font-weight: 600;
+}
+
+/* ── Controls Section ────────────────────────────────────────────── */
+.songs-inspector-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex: 1;
+}
+
+.inspector-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.total-badge {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+    border: none;
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(255, 8, 68, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 8, 68, 0.55);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Scrollable Inspector Container ─────────────────────────────── */
+.cards-scroll-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+    padding-right: 5px;
+    padding-bottom: 20px;
+}
+
+/* Custom Scrollbar for container */
+.cards-scroll-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.cards-scroll-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    border: none;
+}
+
+.cards-scroll-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* ── Song Metadata Cards ────────────────────────────────────────── */
+.metadata-card {
+    display: flex;
+    align-items: center;
+    background: rgba(30, 30, 45, 0.45);
+    backdrop-filter: blur(12px);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 16px;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow: hidden;
+    min-height: 250px;
+}
+
+.metadata-card:hover {
+    transform: translateX(4px);
+    background: rgba(40, 40, 60, 0.55);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Status variants */
+.perfect-card {
+    border-left: 4px solid #a8e1d0;
+}
+
+.warning-card {
+    border-left: 4px solid #ffd166;
+}
+
+.error-card {
+    border-left: 4px solid #ff4d4d;
+}
+
+/* Left Side: Album Art Frame */
+.album-art-side {
+    width: 210px;
+    height: 210px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.album-art-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.metadata-card:hover .album-art-img {
+    transform: scale(1.06);
+}
+
+.fallback-art {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #2b2b3f 0%, #171725 100%);
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.vinyl-icon {
+    width: 50px;
+    height: 50px;
+}
+
+.no-art-badge {
+    position: absolute;
+    bottom: 6px;
+
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+/* Right Side: Metadata list */
+.metadata-details-side {
+    flex: 1;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0;
+    /* Enable text ellipsis on flex children */
+}
+
+.card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.song-title-text {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffffff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+    flex: 1;
+}
+
+.status-badge {
+
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.perfect {
+    background: rgba(168, 225, 208, 0.15);
+    color: #a8e1d0;
+    border: 1px solid rgba(168, 225, 208, 0.3);
+}
+
+.status-badge.warning {
+    background: rgba(255, 209, 102, 0.15);
+    color: #ffd166;
+    border: 1px solid rgba(255, 209, 102, 0.3);
+}
+
+/* Structured List of Metadata */
+.metadata-fields-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+.metadata-fields-list li {
+    display: flex;
+    align-items: center;
+    min-height: 32px;
+    font-size: 0.85rem;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.metadata-fields-list li:last-child {
+    border-bottom: none;
+}
+
+.field-label {
+    width: 70px;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.field-value {
+    color: rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Highlight style for missing metadata values */
+.missing-field .field-value {
+    color: #ffd166;
+}
+
+.empty-placeholder {
+    font-style: italic;
+    opacity: 0.5;
+    color: #ffd166;
+}
+
+/* Card footer details */
+.card-footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.file-info {
+
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.35);
+}
+
+/* Card actions block containing Edit and Remove */
+.card-actions {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+}
+
+/* Card edit button */
+.card-edit-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.card-edit-btn:hover {
+    background: #a8e1d0;
+    border-color: #a8e1d0;
+    color: #121212;
+}
+
+/* Card removal button */
+.card-remove-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 1.6rem;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    line-height: 1;
+}
+
+.card-remove-btn:hover {
+    color: #ff4d4d;
+    transform: scale(1.2);
+}
+
+/* Metadata editing input field styling */
+.metadata-field-input {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+    color: #ffffff;
+    padding: 3px 8px;
+    font-size: 0.85rem;
+    width: 100%;
+    max-width: 320px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.metadata-field-input:focus {
+    border-color: #a8e1d0;
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 8px rgba(168, 225, 208, 0.25);
+}
+
+/* Album art cover file change styles */
+.album-art-side.editable-art {
+    cursor: pointer;
+}
+
+.change-art-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+}
+
+.album-art-side.editable-art:hover .change-art-overlay {
+    opacity: 1;
+}
+
+.change-art-overlay span {
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Status variants and progress badges */
+.status-badge.uploading {
+    background: rgba(23, 162, 184, 0.15);
+    color: #a8d5e2;
+    border: 1px solid rgba(168, 213, 226, 0.3);
+    animation: pulse 1.5s infinite alternate;
+}
+
+.status-badge.uploaded {
+    background: rgba(40, 167, 69, 0.15);
+    color: #a8e1d0;
+    border: 1px solid rgba(168, 225, 208, 0.3);
+}
+
+.status-badge.upload-error {
+    background: rgba(220, 53, 69, 0.15);
+    color: #ff8888;
+    border: 1px solid rgba(255, 136, 136, 0.3);
+}
+
+.uploading-card {
+    border-left: 4px solid #17a2b8 !important;
+}
+
+.uploaded-card {
+    border-left: 4px solid #28a745 !important;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* ── Error State Styling ────────────────────────────────────────── */
+.error-art {
+    background: rgba(255, 77, 77, 0.1);
+    color: #ff4d4d;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.error-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.error-text {
+
+    font-size: 0.85rem;
+    color: #ff4d4d;
+    margin-bottom: 10px;
+}
+
+/* ── Loading Skeletons ──────────────────────────────────────────── */
+.metadata-card.skeleton {
+    pointer-events: none;
+}
+
+.skeleton-art {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.skeleton-line {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton-line.title {
+    height: 24px;
+    width: 45%;
+    margin-bottom: 15px;
+}
+
+.skeleton-line.field {
+    height: 14px;
+    width: 80%;
+    margin-bottom: 8px;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* ── Toast Notifications ────────────────────────────────────────── */
+.upload-toast {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999999;
+    min-width: 280px;
+    max-width: 420px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+
+    font-size: 0.9rem;
+    font-weight: 500;
+    backdrop-filter: blur(15px);
+    animation: slideIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.toast-icon {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.upload-toast.success {
+    background: rgba(40, 167, 69, 0.2);
+    color: #a8e1d0;
+    border-color: rgba(168, 225, 208, 0.4);
+    box-shadow: 0 0 20px rgba(168, 225, 208, 0.2);
+}
+
+.upload-toast.error {
+    background: rgba(220, 53, 69, 0.2);
+    color: #ff8888;
+    border-color: rgba(255, 136, 136, 0.4);
+    box-shadow: 0 0 20px rgba(255, 136, 136, 0.2);
+}
+
+.upload-toast.info {
+    background: rgba(23, 162, 184, 0.2);
+    color: #a8d5e2;
+    border-color: rgba(168, 213, 226, 0.4);
+    box-shadow: 0 0 20px rgba(168, 213, 226, 0.2);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(100px) scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}

@@ -1,0 +1,53 @@
+/* =========================================================================
+   LAYOUT.CSS
+   Handles: Macro Application Structure, Grid Systems, Flex Containers
+   Strictly handles the "skeleton" of the app. Look in global.css for colors.
+   ========================================================================= */
+
+/* ── Global Layout Container ─────────────────────────────────────── */
+.layout-root {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Header Shell ────────────────────────────────────────────────── */
+.main-header {
+  height: var(--header-h);
+  z-index: 1001;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(15px);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+}
+
+/* ── Main App Body ────────────────────────────────────────────────── */
+.whole {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ── Sidebar Shell ────────────────────────────────────────────────── */
+.sidebar {
+  width: var(--side-w);
+  height: 100%;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.3);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 15px;
+}
+
+/* ── Main Section Shell ───────────────────────────────────────────── */
+.main-section {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--gap);
+  display: flex;
+  flex-direction: column;
+}

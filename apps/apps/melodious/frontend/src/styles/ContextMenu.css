@@ -1,0 +1,118 @@
+div.context-menu-container {
+    position: fixed;
+    border-radius: 12px;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
+        inset 0 0 1px rgba(255, 255, 255, 0.2);
+    overflow: visible;
+    background-color: rgba(18, 18, 18, 0.85);
+    user-select: none;
+    transition: transform 0.2s ease;
+    z-index: 99999;
+    pointer-events: auto;
+}
+
+.context-menu-header {
+    padding: 5px 7px;
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 4px;
+}
+
+.context-menu-option {
+    padding: 5px 7px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 2px;
+    position: relative;
+}
+
+.context-menu-option:last-child {
+    margin-bottom: 0;
+}
+
+/* Glass Focus Effect */
+div.context-menu-container:hover .context-menu-option {
+    opacity: 0.5;
+}
+
+div.context-menu-container:hover .context-menu-option:hover {
+    filter: blur(0);
+    opacity: 1;
+}
+
+div.context-menu-container .context-menu-option:hover {
+    filter: blur(0);
+    opacity: 1;
+    color: #fff;
+}
+
+
+/* ── Submenu Container ── */
+.context-submenu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 180px;
+    background: rgba(20, 20, 20, 0.9);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 6px;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    margin-left: 2px;
+}
+
+/* Show submenu on hover */
+.context-menu-option.has-submenu:hover .context-submenu {
+    display: flex;
+}
+
+/* Submenu option */
+.context-submenu-option {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 6px;
+    color: #e0e0e0;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.context-submenu-option:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    transform: translateX(2px);
+}
+
+.context-submenu-option.disabled {
+    color: #666;
+    cursor: not-allowed;
+}
+
+.context-submenu-option.disabled:hover {
+    background: transparent;
+    color: #666;
+    transform: none;
+}
