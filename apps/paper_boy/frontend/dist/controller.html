@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paper-boy Controller</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.45;
+                transform: scale(0.75);
+            }
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #1a1510;
+            --bg-card: #211c16;
+            --bg-raised: #2a2219;
+            --border: rgba(230, 180, 140, 0.1);
+            --border-md: rgba(230, 180, 140, 0.18);
+            --border-hi: rgba(230, 180, 140, 0.35);
+            --accent: #da7756;
+            --accent-lo: rgba(218, 119, 86, 0.12);
+            --accent-md: rgba(218, 119, 86, 0.22);
+            --accent-hi: rgba(218, 119, 86, 0.45);
+            --text-1: #f2ebe3;
+            --text-2: #b5a89a;
+            --text-3: #6e6056;
+            --cream: #e8ddd2;
+            --red: #d05050;
+            --red-lo: rgba(208, 80, 80, 0.1);
+            --red-md: rgba(208, 80, 80, 0.25);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-1);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            padding: 2.5rem 1rem 5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.45s ease-out;
+        }
+
+        .page-wrap {
+            width: 100%;
+            max-width: 880px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* ── Header ── */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .header-logo svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+            color: var(--text-1);
+        }
+
+        .header p {
+            font-size: 13px;
+            color: var(--text-3);
+            margin-top: 3px;
+        }
+
+        .version-pill {
+            margin-left: auto;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            background: var(--accent-lo);
+            color: var(--accent);
+            border: 1px solid var(--accent-md);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .version-pill .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 2s ease infinite;
+        }
+
+        /* ── Now-playing ── */
+        .now-playing {
+            background: var(--bg-card);
+            border: 1px solid var(--border-md);
+            border-left: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .now-playing i {
+            font-size: 16px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .np-label {
+            color: var(--text-3);
+        }
+
+        .np-name {
+            color: var(--text-1);
+            font-weight: 500;
+            margin-left: 4px;
+        }
+
+        .live-badge {
+            display: none;
+            align-items: center;
+            gap: 5px;
+            margin-left: auto;
+            padding: 3px 11px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--accent-lo);
+            color: var(--accent);
+            border: 1px solid var(--accent-md);
+            letter-spacing: 0.05em;
+            flex-shrink: 0;
+        }
+
+        .live-badge .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 2s ease infinite;
+        }
+
+        /* ── Control panel ── */
+        .control-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-header i {
+            font-size: 15px;
+            color: var(--accent);
+        }
+
+        .panel-title {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-3);
+        }
+
+        .slider-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem 2.5rem;
+        }
+
+        .slider-item {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slider-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-2);
+        }
+
+        .slider-label i {
+            font-size: 15px;
+            color: var(--accent);
+        }
+
+        .slider-val {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--cream);
+            min-width: 36px;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 3px;
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+            background: linear-gradient(to right,
+                    var(--accent) var(--pct, 100%),
+                    var(--bg-raised) var(--pct, 100%));
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--cream);
+            border: none;
+            box-shadow: 0 0 0 3px var(--accent-hi), 0 2px 6px rgba(0, 0, 0, 0.4);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        input[type=range]:hover::-webkit-slider-thumb {
+            transform: scale(1.2);
+            box-shadow: 0 0 0 5px var(--accent-md), 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        input[type=range]:active::-webkit-slider-thumb {
+            transform: scale(1.05);
+        }
+
+        /* ── Sections ── */
+        .section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-3);
+        }
+
+        .section-header i {
+            font-size: 13px;
+            color: var(--accent);
+        }
+
+        .section-header::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── Media cards ── */
+        .gallery-scroll {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--bg-raised) transparent;
+        }
+
+        .gallery-scroll::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        .gallery-scroll::-webkit-scrollbar-thumb {
+            background: var(--bg-raised);
+            border-radius: 2px;
+        }
+
+        .media-card {
+            flex: 0 0 134px;
+            height: 84px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .media-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px) scale(1.03);
+        }
+
+        .media-card:active {
+            transform: translateY(0) scale(0.97);
+        }
+
+        .media-card img,
+        .media-card video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+            filter: brightness(0.8);
+            transition: filter 0.2s;
+            background: var(--bg-raised);
+        }
+
+        .media-card:hover img,
+        .media-card:hover video {
+            filter: brightness(1);
+        }
+
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(26, 21, 16, 0);
+            transition: background 0.2s;
+        }
+
+        .media-card:hover .card-overlay {
+            background: rgba(218, 119, 86, 0.15);
+        }
+
+        .card-overlay i {
+            font-size: 26px;
+            color: var(--cream);
+            opacity: 0;
+            transform: scale(0.7);
+            filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.7));
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .media-card:hover .card-overlay i {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ── Pill buttons ── */
+        .pill-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .pill-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border-md);
+            background: var(--bg-card);
+            color: var(--text-2);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s, box-shadow 0.15s;
+        }
+
+        .pill-btn i {
+            font-size: 14px;
+            color: var(--text-3);
+            transition: color 0.15s;
+        }
+
+        .pill-btn:hover {
+            background: var(--bg-raised);
+            border-color: var(--accent);
+            color: var(--cream);
+            box-shadow: 0 0 0 3px var(--accent-lo);
+        }
+
+        .pill-btn:hover i {
+            color: var(--accent);
+        }
+
+        .pill-btn:active {
+            transform: scale(0.96);
+        }
+
+        .pill-btn.stop {
+            border-color: var(--red-md);
+            color: #e07070;
+        }
+
+        .pill-btn.stop i {
+            color: #e07070;
+        }
+
+        .pill-btn.stop:hover {
+            background: var(--red-lo);
+            border-color: var(--red);
+            color: #f09090;
+            box-shadow: 0 0 0 3px var(--red-lo);
+        }
+
+        .pill-btn.stop:hover i {
+            color: #f09090;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrap">
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-logo">
+                <svg viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M28.268 5.756a1.034 1.034 0 0 0-1.953 0l-2.533 7.374H14.22a1.034 1.034 0 0 0-.608 1.868l7.892 5.735-3.014 9.285a1.034 1.034 0 0 0 1.59 1.156L28 25.438l7.92 5.736a1.034 1.034 0 0 0 1.59-1.156l-3.015-9.285 7.893-5.735a1.034 1.034 0 0 0-.608-1.868H32.2l-2.533-7.374h-.001zM5.756 12.732a1.034 1.034 0 0 0-1.953 0L1.27 20.106H-8.302a1.034 1.034 0 0 0-.607 1.868l7.892 5.735-3.015 9.285a1.034 1.034 0 0 0 1.59 1.156L5.49 32.414l7.92 5.736a1.034 1.034 0 0 0 1.59-1.156l-3.015-9.285 7.892-5.735a1.034 1.034 0 0 0-.607-1.868H9.696l-2.533-7.374h-.001z"
+                        fill="#da7756" />
+                    <path
+                        d="M20.3 3C10.745 3 3 10.745 3 20.3S10.745 37.6 20.3 37.6 37.6 29.855 37.6 20.3 29.855 3 20.3 3zm0 2.5c8.177 0 14.8 6.623 14.8 14.8S28.477 35.1 20.3 35.1 5.5 28.477 5.5 20.3 12.123 5.5 20.3 5.5zm-5 8.5a1.25 1.25 0 0 0 0 2.5h3.75v7.5H15.3a1.25 1.25 0 0 0 0 2.5h10a1.25 1.25 0 0 0 0-2.5H21.3V14h3.75a1.25 1.25 0 0 0 0-2.5h-9.75z"
+                        fill="#da7756" opacity="0" />
+                </svg>
+            </div>
+            <div>
+                <h1>Display Engine</h1>
+            </div>
+            <span class="version-pill"><span class="dot"></span>Live</span>
+        </div>
+
+        <!-- Now playing -->
+        <div class="now-playing">
+            <i class="ti ti-player-play"></i>
+            <span class="np-label">Now showing:</span>
+            <span class="np-name" id="np-name">—</span>
+            <span class="live-badge" id="live-badge"><span class="dot"></span>Active</span>
+        </div>
+
+        <!-- Controls -->
+        <div class="control-panel">
+            <div class="panel-header">
+                <i class="ti ti-adjustments-horizontal"></i>
+                <span class="panel-title">Display controls</span>
+            </div>
+            <div class="slider-row">
+                <div class="slider-item">
+                    <div class="slider-header">
+                        <span class="slider-label"><i class="ti ti-sun"></i>Brightness</span>
+                        <span class="slider-val" id="bright-val">100%</span>
+                    </div>
+                    <input type="range" id="brightness" name="brightness" min="0" max="100" value="100" step="1">
+                </div>
+                <div class="slider-item">
+                    <div class="slider-header">
+                        <span class="slider-label"><i class="ti ti-blur"></i>Blur</span>
+                        <span class="slider-val" id="blur-val">0px</span>
+                    </div>
+                    <input type="range" id="blurness" name="blurness" min="0" max="10" value="0" step="1">
+                </div>
+                <div class="slider-item">
+                    <div class="slider-header">
+                        <span class="slider-label"><i class="ti ti-volume"></i>Volume</span>
+                        <span class="slider-val" id="vol-val">100%</span>
+                    </div>
+                    <input type="range" id="volume" name="volume" min="0" max="100" value="100" step="1">
+                </div>
+                <div class="slider-item">
+                    <div class="slider-header">
+                        <span class="slider-label"><i class="ti ti-palette"></i>Text Color</span>
+                        <span class="slider-val" id="color-val">#FFFFFF</span>
+                    </div>
+                    <input type="color" id="textcolor" name="textcolor" value="#ffffff"
+                        style="width: 100%; height: 32px; border: none; background: transparent; cursor: pointer; padding: 0;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Videos -->
+        <div class="section">
+            <div class="section-header"><i class="ti ti-video"></i>Videos</div>
+            <div class="gallery-scroll" id="video-container"></div>
+        </div>
+
+        <!-- Images -->
+        <div class="section">
+            <div class="section-header"><i class="ti ti-photo"></i>Images</div>
+            <div class="gallery-scroll" id="image-container"></div>
+        </div>
+
+        <!-- Audios -->
+        <div class="section">
+            <div class="section-header"><i class="ti ti-music"></i>Audios</div>
+            <div class="pill-grid" id="audio-container"></div>
+        </div>
+
+        <!-- Overlays -->
+        <div class="section">
+            <div class="section-header"><i class="ti ti-layers-subtract"></i>Overlays</div>
+            <div class="pill-grid" id="overlay-container"></div>
+        </div>
+
+    </div>
+</body>
+
+<script type="module">
+    const ws = new WebSocket("ws://" + location.host + "/ws/controller")
+
+    const bright = document.getElementById('brightness');
+    const blurEl = document.getElementById('blurness');
+    const vol = document.getElementById('volume');
+    const brightVal = document.getElementById('bright-val');
+    const blurVal = document.getElementById('blur-val');
+    const volVal = document.getElementById('vol-val');
+    const colorInput = document.getElementById('textcolor');
+    const colorVal = document.getElementById('color-val');
+    const npName = document.getElementById('np-name');
+    const liveBadge = document.getElementById('live-badge');
+
+    function updateTrack(input) {
+        const pct = ((input.value - input.min) / (input.max - input.min)) * 100;
+        input.style.setProperty('--pct', pct + '%');
+    }
+
+    function throttle(callback, delay) {
+        let shouldWait = false, waitingArgs;
+        const timeoutFunc = () => {
+            if (waitingArgs == null) { shouldWait = false; }
+            else { callback(...waitingArgs); waitingArgs = null; setTimeout(timeoutFunc, delay); }
+        };
+        return (...args) => {
+            if (shouldWait) { waitingArgs = args; return; }
+            callback(...args); shouldWait = true; setTimeout(timeoutFunc, delay);
+        };
+    }
+
+    function sendVisualsSocket() {
+        ws.send(JSON.stringify({
+            type: "visuals",
+            brightness: bright.value,
+            blurness: blurEl.value,
+            volume: vol.value,
+            color: colorInput.value
+        }));
+    }
+
+    const throttledSocketSend = throttle(sendVisualsSocket, 100);
+
+    function handleVisualsChange() {
+        brightVal.textContent = bright.value + '%';
+        blurVal.textContent = blurEl.value + 'px';
+        volVal.textContent = vol.value + '%';
+        colorVal.textContent = colorInput.value.toUpperCase();
+
+        updateTrack(bright); updateTrack(blurEl); updateTrack(vol);
+        throttledSocketSend();
+    }
+
+    [bright, blurEl, vol, colorInput].forEach(el => {
+        el.addEventListener('input', handleVisualsChange);
+        if (el.type !== 'color') {
+            updateTrack(el);
+        }
+    });
+
+    function setNowPlaying(name) {
+        npName.textContent = name || '—';
+        liveBadge.style.display = (name && name !== '—') ? 'inline-flex' : 'none';
+    }
+
+    const lazyObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                if (el.dataset.src) {
+                    el.src = el.dataset.src;
+                    el.removeAttribute('data-src');
+                }
+                observer.unobserve(el);
+            }
+        });
+    }, { rootMargin: '200px' });
+
+    function populateContainer(list, containerId) {
+        const container = document.getElementById(containerId);
+        if (!list) return;
+        list.forEach(v => {
+            const ext = v.split('.').pop().toLowerCase();
+            const isVideo = ['mp4', 'webm', 'ogg', 'mov'].includes(ext);
+
+            const card = document.createElement('div');
+            card.className = 'media-card';
+
+            let mediaEl;
+            if (isVideo) {
+                mediaEl = document.createElement('video');
+                mediaEl.dataset.src = `/assets/video/${v}#t=0.1`;
+                mediaEl.muted = true;
+                mediaEl.loop = true;
+                mediaEl.playsInline = true;
+                mediaEl.preload = "metadata";
+
+                card.addEventListener('mouseenter', () => {
+                    mediaEl.play().catch(() => { });
+                });
+                card.addEventListener('mouseleave', () => {
+                    mediaEl.pause();
+                });
+            } else {
+                mediaEl = document.createElement('img');
+                mediaEl.dataset.src = `/assets/image/${v}`;
+                mediaEl.onerror = () => {
+                    mediaEl.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRz0rj-oni2HDHa0a3AUR1ISYHtnesCZkzY6uo5OeV2_65YLg4J71pC_Fc&s=10';
+                };
+            }
+
+            lazyObserver.observe(mediaEl);
+
+            const overlay = document.createElement('div');
+            overlay.className = 'card-overlay';
+            const icon = document.createElement('i');
+            icon.className = isVideo ? 'ti ti-player-play' : 'ti ti-eye';
+            overlay.appendChild(icon);
+
+            card.appendChild(mediaEl);
+            card.appendChild(overlay);
+            card.addEventListener('click', () => {
+                ws.send(JSON.stringify({ type: "switch_video", video: v }));
+                setNowPlaying(v);
+            });
+            container.appendChild(card);
+        });
+    }
+
+    function populatePills(items, containerId, msgType, stopLabel) {
+        const container = document.getElementById(containerId);
+
+        const stopBtn = document.createElement('button');
+        stopBtn.className = 'pill-btn stop';
+        stopBtn.innerHTML = `<i class="ti ti-player-stop"></i>${stopLabel}`;
+        stopBtn.addEventListener('click', () => {
+            ws.send(JSON.stringify({ type: msgType, file: "STOP" }));
+            if (msgType !== 'switch_overlay') setNowPlaying('—');
+        });
+        container.appendChild(stopBtn);
+
+        items.forEach(item => {
+            const btn = document.createElement('button');
+            btn.className = 'pill-btn';
+            const iconName = msgType === 'switch_audio' ? 'ti-music' : 'ti-layers-subtract';
+            btn.innerHTML = `<i class="ti ${iconName}"></i>${item.name}`;
+            btn.addEventListener('click', () => {
+                ws.send(JSON.stringify({ type: msgType, file: item.file }));
+                if (msgType === 'switch_audio') setNowPlaying(item.name);
+            });
+            container.appendChild(btn);
+        });
+    }
+
+    fetch('/api/assets')
+        .then(res => res.json())
+        .then(assets => {
+            populateContainer(assets.video, "video-container");
+            populateContainer(assets.image, "image-container");
+            populatePills(assets.audio, "audio-container", "switch_audio", "Stop audio");
+            populatePills(assets.overlay, "overlay-container", "switch_overlay", "Stop overlay");
+        })
+        .catch(err => console.error("Failed to load assets from server:", err));
+</script>
+
+</html>

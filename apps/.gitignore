@@ -1,0 +1,55 @@
+# all
+__pycache__
+node_modules
+.vscode
+.directorymap
+archive
+.DS_Store
+certs
+venv
+frontend-sep
+dist
+
+# WIP
+4.2.3
+
+# yt-downloader
+downloads/*
+!downloads/.gitkeep
+
+# file server
+storage/*
+!storage/.gitkeep
+
+# melodious
+*.db
+apps/melodious/assets/album-arts/*
+!apps/melodious/assets/album-arts/.gitkeep
+
+apps/melodious/assets/artist-images/*
+!apps/melodious/assets/artist-images/.gitkeep
+
+apps/melodious/assets/lyrics/*
+~apps/melodious/assets/album-arts/.gitkeep
+
+apps/melodious/assets/data/*
+~apps/melodious/assets/data/.gitkeep
+
+apps/melodious/assets/wallpaper/*
+~apps/melodious/assets/wallpaper/.gitkeep
+
+# paper boy
+apps/paper_boy/frontend/assets/video/*
+!apps/paper_boy/frontend/assets/video/.gitkeep
+
+apps/paper_boy/frontend/assets/image/*
+!apps/paper_boy/frontend/assets/image/.gitkeep
+
+apps/paper_boy/frontend/assets/audio/*
+!apps/paper_boy/frontend/assets/audio/.gitkeep
+
+apps/paper_boy/frontend/assets/overlay/*
+!apps/paper_boy/frontend/assets/overlay/.gitkeep
+
+Dockerfile
+.env

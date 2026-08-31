@@ -1,0 +1,1 @@
+echo "Battery: $(termux-battery-status | jq -r '.percentage')%"
