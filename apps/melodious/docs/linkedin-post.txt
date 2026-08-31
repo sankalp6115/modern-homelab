@@ -1,0 +1,14 @@
+Like a lot of students starting with their engineering, i also built a music player for a project, i used html,css and js, implemented basic features like media control, shuffle, repeat, volume control and some unique features like voice command control, custom playlists creation, good looking ui and some ornamental features like a oneko cat running towards your cursor and some easter eggs.
+I put a whole semester into making it, kept polishing the UI, implementing the features.
+originally I had built it for personal use, but i had to keep it sitting in github repo, because there was no comfortable way of using it in daily life.
+For use in daily life, it had to be as comfortable to use as something like spotify or ytmusic, their convenience comes from the fact that they have servers all over the world using which they serve the whole world from anywhere , anytime.
+Running a server on the main laptop was not really a feasible idea, as a device that could always stay awake would make more sense and provide the convenience i was looking for.
+Now it just sat there for a while.
+Then recently in my 4th semester, we got an assignment from our professor, that required us to work with virtual machines and linux and networking, and develop a distributed system of database and crud operations running in different machines and the app worked by networking in the same LANs.
+Now this was a turning point, as working with this distributed system exposed me to usage of linux commands and virtual machines and basic networking, getting comfortable with it.
+After this assignment, i did not leave the idea, i went deeper into this rabbithole, and eventually discovered something that the internet calls a homelab.
+In a homelab, people basically host either their own apps or other open source apps on their own hardware instead of using a cloud infrastructure, giving them independence and control over what they do, what they want on their own device.
+I did the same , i had an old laptop lying around, i booted it with alpine linux, cloned my app into it, and brought it to life again.
+Now when I am connecting the old laptop to the same LAN/Network as my other devices, i can access my app on other devices by using DEVICE_IP:PORT , and i could stream music from my old laptop in main laptop.
+it is so easy and seamless that it has actually replaced my spotify usage. Whenever i want to listen to music, i go to my own app rather than spotify.
+This project taught me the most used commands of linux, basic ip-address netwroking, concept of self-hosting, deployment basics, also learnt docker, reverse proxies, mesh vpn, virtual machines, and most important self-reliance 🥲

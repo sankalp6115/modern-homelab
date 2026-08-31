@@ -1,0 +1,52 @@
+I thought I had finished my music player project.
+
+Turns out, I had only finished writing the code.
+
+Like many engineering students, I built a music player as a semester project using HTML, CSS and JavaScript. It supported media controls, playlists, shuffle, repeat, volume control, voice commands, a polished UI, and even a tiny Oneko cat that chased your cursor around the screen. I spent an entire semester refining every little detail because I originally wanted to use it myself.
+
+But there was one problem.
+
+After the project ended, it just sat in a GitHub repository.
+
+A web application isn't truly useful if it only works while your development laptop is running. Apps like Spotify and YouTube Music feel effortless because they're always available. Mine wasn't.
+
+Then, during my fourth semester, our professor assigned us to build a distributed CRUD application using Linux virtual machines and networking. We had to make multiple machines communicate over a LAN.
+
+That assignment completely changed the way I thought about software.
+
+Instead of stopping after submitting it, I kept exploring Linux, networking, Docker, reverse proxies, virtual machines, VPNs, and deployment. Somewhere along the way, I discovered something called a **homelab**.
+
+I had an old laptop collecting dust.
+
+So I installed Alpine Linux, deployed my music player on it, and turned it into my own server.
+
+Now, whenever both devices are on the same network, I simply open my browser, visit my server, and start listening to music.
+
+No IDE.
+No local development server.
+No "npm start."
+
+Just my own application, running independently.
+
+What started as a college project has become the music app I actually use every day. It has genuinely replaced Spotify for my personal listening.
+
+More importantly, this project taught me lessons that no classroom assignment could:
+
+• Linux command line and system administration
+• IP networking fundamentals
+• Deployment and self-hosting
+• Docker and containers
+• Reverse proxies
+• Mesh VPNs
+• Virtual machines
+• And most importantly, the confidence to build and run my own infrastructure instead of depending entirely on someone else's.
+
+Looking back, the most valuable thing I built wasn't the music player.
+
+It was the environment that brought it to life.
+
+Sometimes a project isn't finished when the code works.
+
+It's finished when you actually use it.
+
+#Linux #SelfHosting #HomeLab #Docker #Networking #WebDevelopment #JavaScript #EngineeringStudent #BuildInPublic
