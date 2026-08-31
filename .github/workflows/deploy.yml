@@ -1,0 +1,118 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: homelab-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          path: source
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Checkout deploy branch
+        uses: actions/checkout@v4
+        with:
+          ref: deploy
+          path: deploy_repo
+          fetch-depth: 0
+
+      - name: Build React frontends and assemble apps
+        run: |
+          FRONTEND_APPS=("file_server" "home" "idea_inbox" "keybinder" "melodious" "monitor" "paper_boy" "quote" "yt_downloader")
+          
+          for app in "${FRONTEND_APPS[@]}"; do
+            echo "::group::Building frontend for $app"
+            if [ -d "source/apps/apps/$app/frontend" ]; then
+              pushd "source/apps/apps/$app/frontend"
+              npm ci
+              npm run build
+              popd
+            fi
+            echo "::endgroup::"
+          done
+
+          ALL_APPS=("file_server" "home" "idea_inbox" "keybinder" "melodious" "monitor" "no-as-a-service" "paper_boy" "quote" "yt_downloader")
+
+          for app in "${ALL_APPS[@]}"; do
+            echo "Assembling $app in deploy repo..."
+            rm -rf "deploy_repo/apps/$app"
+            mkdir -p "deploy_repo/apps/$app"
+
+            if [ -d "source/apps/apps/$app/backend" ]; then
+              mkdir -p "deploy_repo/apps/$app/backend"
+              rsync -a "source/apps/apps/$app/backend/" "deploy_repo/apps/$app/backend/"
+            fi
+
+            if [ -d "source/apps/apps/$app/frontend/dist" ]; then
+              mkdir -p "deploy_repo/apps/$app/frontend/dist"
+              rsync -a "source/apps/apps/$app/frontend/dist/" "deploy_repo/apps/$app/frontend/dist/"
+            fi
+
+            if [ -f "source/apps/apps/$app/start.sh" ]; then
+              cp "source/apps/apps/$app/start.sh" "deploy_repo/apps/$app/start.sh"
+            fi
+          done
+
+      - name: Copy integrated repos and common files
+        run: |
+          # Copy top-level repos (gotify, termux_bootstrap, termux_scripting, etc.) excluding heavy artifacts
+          rsync -av --delete \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='apps' \
+            --exclude='node_modules' \
+            --exclude='__pycache__' \
+            --exclude='*.pyc' \
+            --exclude='*.pyo' \
+            --exclude='.pytest_cache' \
+            --exclude='.venv' \
+            --exclude='venv' \
+            --exclude='.env*' \
+            --exclude='.DS_Store' \
+            --exclude='Thumbs.db' \
+            source/ deploy_repo/
+
+          # Copy top-level apps files (homelab-env.yaml, requirements.txt, scripts, etc.) excluding raw app sources
+          rsync -av \
+            --exclude='apps' \
+            --exclude='node_modules' \
+            --exclude='__pycache__' \
+            --exclude='*.pyc' \
+            --exclude='.venv' \
+            --exclude='venv' \
+            --exclude='.env*' \
+            --exclude='.DS_Store' \
+            --exclude='Thumbs.db' \
+            source/apps/ deploy_repo/apps/
+
+      - name: Commit and push single deployment
+        working-directory: deploy_repo
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          
+          # Force add dist directories in case .gitignore excludes dist/
+          find apps -type d -name "dist" -exec git add -f {} + 2>/dev/null || true
+          
+          git add .
+          if git diff --staged --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "Deploy ${GITHUB_SHA}"
+            git push origin deploy
+          fi
