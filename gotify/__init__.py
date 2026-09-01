@@ -1,0 +1,1 @@
+from .gotify import Gotify

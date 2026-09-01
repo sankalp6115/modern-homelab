@@ -8,13 +8,14 @@ version = "0.1.0"
 description = "Lightweight Gotify notification client for homelab scripts"
 requires-python = ">=3.9"
 dependencies = [
-    "requests",
-    "python-dotenv",
+    "requests"
 ]
 
 [project.scripts]
 gotify-cli = "gotify.gotify_cli:main"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["gotify*"]
+[tool.setuptools]
+packages = ["gotify"]
+
+[tool.setuptools.package-dir]
+gotify = "."
