@@ -9,7 +9,7 @@ class Gotify:
             "Accept": "application/json"
         } 
     
-    def send(self, title: str, message: str, priority: int = 5) -> None: 
+    def send(self, title: str | None, message: str, priority: int = 5) -> None: 
         response = requests.post(
             self.url,
             data={

@@ -1,14 +1,26 @@
+import os
+import argparse
+import uvicorn
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
+
+try:
+    from gotify import Gotify
+    GOTIFY_TOKEN = os.getenv("GOTIFY_TOKEN")
+    GOTIFY_SERVER = os.getenv("GOTIFY_SERVER")
+    gotify = Gotify(GOTIFY_SERVER, GOTIFY_TOKEN) if (GOTIFY_SERVER and GOTIFY_TOKEN) else None
+except Exception:
+    gotify = None
 
 from utils.path_resolver import get_assets_dir
-
 from api import songs, playlists, artists, lyrics, debug, wallpaper
 from database import init_db
-import uvicorn
-from pathlib import Path
 
 FRONTEND_DIRECTORY = Path(__file__).resolve().parent.parent / "frontend" / "dist"
 
@@ -29,6 +41,7 @@ async def add_cors_header(request, call_next):
     response = await call_next(request)
     response.headers["Access-Control-Allow-Origin"] = "*"
     return response
+
 # ---------------- Routes ----------------
 app.include_router(songs.router, prefix="/api/songs", tags=["Songs"])
 app.include_router(playlists.router, prefix="/api/playlists", tags=["Playlists"])
@@ -56,8 +69,14 @@ async def serve_frontend(full_path: str):
 
 
 if __name__ == "__main__":
-    import argparse
     parser = argparse.ArgumentParser(description="Melodious Backend")
     parser.add_argument("--port", type=int, default=8000, help="Port to bind the server to")
     args = parser.parse_args()
+
+    if gotify:
+        try:
+            gotify.info("Melodious Up", f"Melodious started on port {args.port}")
+        except Exception:
+            pass
+
     uvicorn.run("main:app", port=args.port, host="0.0.0.0")
