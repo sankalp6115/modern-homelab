@@ -1,0 +1,75 @@
+storage:
+  type: sqlite
+  path: /data/data/com.termux/files/home/monitoring/gatus.db
+
+web:
+  port: 8081
+
+alerting:
+  gotify:
+    server-url: "http://100.64.0.5:8080"
+    token: "gtfya.EHBjjXiTGapQp53UL3VYz04kDVrhBasY_kN0_viAQWc"
+    priority: 5
+    title: "Gatus: 100.64.0.5:8080"
+    default-alert:
+      failure-threshold: 3
+      success-threshold: 2
+      send-on-resolved: true
+      description: "Endpoint health check failed"
+
+endpoints:
+  - name: Melodious
+    group: Applications
+    url: http://100.64.0.4:3000
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: gotify
+
+  - name: Paper Boy
+    group: Applications
+    url: http://100.64.0.4:3002
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: gotify
+
+  - name: No As A Service
+    group: Applications
+    url: http://100.64.0.4:3001
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: gotify
+
+  - name: YouTube Downloader
+    group: Applications
+    url: http://100.64.0.4:3005
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: gotify
+
+  # Redmi Applications
+
+  - name: File Server
+    group: Applications
+    url: http://100.64.0.5:3000
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: gotify
+
+  - name: Gotify
+    group: Applications
+    url: http://100.64.0.5:8080
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: gotify

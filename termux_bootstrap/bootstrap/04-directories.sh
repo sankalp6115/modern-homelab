@@ -2,7 +2,6 @@
 set -euo pipefail
 
 mkdir -p \
-  "$HOME/apps" \
   "$HOME/archives" \
   "$HOME/backups" \
   "$HOME/logs" \

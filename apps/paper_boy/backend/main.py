@@ -1,14 +1,25 @@
-from fastapi import FastAPI, WebSocket
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+import os
+import argparse
 import asyncio
 import uvicorn
 import json
 from pathlib import Path
-import os
+from fastapi import FastAPI, WebSocket
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
+
+try:
+    from gotify import Gotify
+    GOTIFY_TOKEN = os.getenv("GOTIFY_TOKEN")
+    GOTIFY_SERVER = os.getenv("GOTIFY_SERVER")
+    gotify = Gotify(GOTIFY_SERVER, GOTIFY_TOKEN) if (GOTIFY_SERVER and GOTIFY_TOKEN) else None
+except Exception:
+    gotify = None
 
 app = FastAPI()
-
 
 connected_players = []
 
@@ -103,7 +114,6 @@ def get_assets():
     
     return assets
 
-from pathlib import Path
 FRONTEND_DIR = Path(__file__).parent.parent / "frontend" / "dist"
 
 @app.get("/controller")
@@ -114,11 +124,18 @@ async def controller():
 async def home():
     return FileResponse(FRONTEND_DIR / "index.html")
 
-app.mount("/assets", StaticFiles(directory=str(DIR_PATH)), name="assets")
+if DIR_PATH.exists():
+    app.mount("/assets", StaticFiles(directory=str(DIR_PATH)), name="assets")
 
 if __name__ == "__main__":
-    import argparse
     parser = argparse.ArgumentParser(description="Backend Server")
     parser.add_argument("--port", type=int, default=8000, help="Port to bind the server to")
     args = parser.parse_args()
+
+    if gotify:
+        try:
+            gotify.info("Paper Boy Up", f"Paper Boy started on port {args.port}")
+        except Exception:
+            pass
+
     uvicorn.run("main:app", port=args.port, host="0.0.0.0")
