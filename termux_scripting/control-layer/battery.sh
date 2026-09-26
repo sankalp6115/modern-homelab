@@ -1,4 +1,4 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/usr/bin/env bash
 
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo ""

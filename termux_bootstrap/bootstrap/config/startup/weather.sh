@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 result=$(curl -s "https://api.open-meteo.com/v1/forecast?latitude=26.52&longitude=80.33&forecast_days=1&timezone=auto&current=temperature_2m,weather_code")
 
 weather_code=$(echo "$result" | jq -r '.current.weather_code')

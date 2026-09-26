@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 TOTAL=$(df -h /data | awk 'NR==2 {print $2}')
 USED=$(df -h /data | awk 'NR==2 {print $3}')
 AVAILABLE=$(df -h /data | awk 'NR==2 {print $4}')

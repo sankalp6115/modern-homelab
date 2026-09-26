@@ -1,3 +1,3 @@
-#!/bin/zsh
+#!/usr/bin/env bash
 cd ~/homelab/apps/no-as-a-service/backend
-/data/data/com.termux/files/usr/bin/python3.11 main.py --port 3001
+uv run main.py --port 3001

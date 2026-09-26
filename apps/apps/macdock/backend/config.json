@@ -1,0 +1,319 @@
+{
+  "pages": [
+    {
+      "id": "media",
+      "name": "Media",
+      "icon": "/icons/spotify.png",
+      "widgets": [
+        "sys_volume",
+        "app_volume"
+      ],
+      "buttons": [
+        {
+          "name": "Prev",
+          "icon": "/icons/skip-prev.png",
+          "action": {
+            "type": "media",
+            "cmd": "previous"
+          }
+        },
+        {
+          "name": "Play / Pause",
+          "icon": "/icons/play.png",
+          "action": {
+            "type": "media",
+            "cmd": "play_pause"
+          }
+        },
+        {
+          "name": "Next",
+          "icon": "/icons/skip-next.png",
+          "action": {
+            "type": "media",
+            "cmd": "next"
+          }
+        },
+        {
+          "name": "Shuffle",
+          "icon": "/icons/shuffle.png",
+          "action": {
+            "type": "media",
+            "cmd": "shuffle"
+          }
+        },
+        {
+          "name": "Repeat",
+          "icon": "/icons/repeat.png",
+          "action": {
+            "type": "media",
+            "cmd": "repeat"
+          }
+        },
+        {
+          "name": "Mute",
+          "icon": "/icons/volume-mute.png",
+          "action": {
+            "type": "volume",
+            "value": 0
+          }
+        },
+        {
+          "name": "Vol −",
+          "icon": "/icons/volume-low.png",
+          "action": {
+            "type": "volume_nudge",
+            "delta": -10
+          }
+        },
+        {
+          "name": "Vol +",
+          "icon": "/icons/volume-high.png",
+          "action": {
+            "type": "volume_nudge",
+            "delta": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "apps",
+      "name": "Apps",
+      "icon": "/icons/terminal.png",
+      "buttons": [
+        {
+          "name": "VS Code",
+          "icon": "/icons/vscode.png",
+          "action": {
+            "type": "app",
+            "target": "vscode"
+          }
+        },
+        {
+          "name": "Antigravity",
+          "icon": "/icons/antigravity.png",
+          "action": {
+            "type": "app",
+            "target": "antigravity"
+          }
+        },
+        {
+          "name": "Android Studio",
+          "icon": "/icons/androidstudio.png",
+          "action": {
+            "type": "app",
+            "target": "androidstudio"
+          }
+        },
+        {
+          "name": "Terminal",
+          "icon": "/icons/terminal.png",
+          "action": {
+            "type": "app",
+            "target": "terminal"
+          }
+        },
+        {
+          "name": "Obsidian",
+          "icon": "/icons/obsidian.png",
+          "action": {
+            "type": "app",
+            "target": "obsidian"
+          }
+        },
+        {
+          "name": "WhatsApp",
+          "icon": "/icons/whatsapp.png",
+          "action": {
+            "type": "app",
+            "target": "whatsapp"
+          }
+        },
+        {
+          "name": "Spotify",
+          "icon": "/icons/spotify.png",
+          "action": {
+            "type": "app",
+            "target": "spotify"
+          }
+        },
+        {
+          "name": "Calendar",
+          "icon": "/icons/calendar.png",
+          "action": {
+            "type": "app",
+            "target": "calendar"
+          }
+        },
+        {
+          "name": "Activity Mon",
+          "icon": "/icons/activitymonitor.png",
+          "action": {
+            "type": "app",
+            "target": "activitymonitor"
+          }
+        },
+        {
+          "name": "Docker",
+          "icon": "/icons/docker.png",
+          "action": {
+            "type": "app",
+            "target": "docker"
+          }
+        },
+        {
+          "name": "Tailscale",
+          "icon": "/icons/tailscale.png",
+          "action": {
+            "type": "app",
+            "target": "tailscale"
+          }
+        },
+        {
+          "name": "Finder",
+          "icon": "/icons/finder.png",
+          "action": {
+            "type": "app",
+            "target": "finder"
+          }
+        }
+      ]
+    },
+    {
+      "id": "web",
+      "name": "Web",
+      "icon": "/icons/github.png",
+      "buttons": [
+        {
+          "name": "GitHub",
+          "icon": "/icons/github.png",
+          "action": {
+            "type": "url",
+            "url": "https://github.com"
+          }
+        },
+        {
+          "name": "Colab",
+          "icon": "/icons/colab.png",
+          "action": {
+            "type": "url",
+            "url": "https://colab.research.google.com"
+          }
+        },
+        {
+          "name": "Vercel",
+          "icon": "/icons/vercel.png",
+          "action": {
+            "type": "url",
+            "url": "https://vercel.com/dashboard"
+          }
+        },
+        {
+          "name": "ChatGPT",
+          "icon": "/icons/gpt.png",
+          "action": {
+            "type": "url",
+            "url": "https://chat.openai.com"
+          }
+        },
+        {
+          "name": "Claude",
+          "icon": "/icons/claude.png",
+          "action": {
+            "type": "url",
+            "url": "https://claude.ai"
+          }
+        },
+        {
+          "name": "Gemini",
+          "icon": "/icons/gemini.png",
+          "action": {
+            "type": "url",
+            "url": "https://gemini.google.com"
+          }
+        },
+        {
+          "name": "Oracle Cloud",
+          "icon": "/icons/oracle.png",
+          "action": {
+            "type": "url",
+            "url": "https://cloud.oracle.com"
+          }
+        },
+        {
+          "name": "GCP",
+          "icon": "/icons/gcp.png",
+          "action": {
+            "type": "url",
+            "url": "https://console.cloud.google.com"
+          }
+        },
+        {
+          "name": "Google Drive",
+          "icon": "/icons/drive.png",
+          "action": {
+            "type": "url",
+            "url": "https://drive.google.com"
+          }
+        },
+        {
+          "name": "OneDrive",
+          "icon": "/icons/onedrive.png",
+          "action": {
+            "type": "url",
+            "url": "https://onedrive.live.com"
+          }
+        },
+        {
+          "name": "LinkedIn",
+          "icon": "/icons/linkedin.png",
+          "action": {
+            "type": "url",
+            "url": "https://linkedin.com"
+          }
+        },
+        {
+          "name": "YouTube",
+          "icon": "/icons/youtube.png",
+          "action": {
+            "type": "url",
+            "url": "https://youtube.com"
+          }
+        },
+        {
+          "name": "LeetCode",
+          "icon": "/icons/leetcode.png",
+          "action": {
+            "type": "url",
+            "url": "https://leetcode.com"
+          }
+        },
+        {
+          "name": "CodeChef",
+          "icon": "/icons/codechef.png",
+          "action": {
+            "type": "url",
+            "url": "https://codechef.com"
+          }
+        }
+      ]
+    },
+    {
+      "id": "system",
+      "name": "System",
+      "icon": "/icons/sun.png",
+      "widgets": [
+        "brightness"
+      ],
+      "buttons": [
+        {
+          "name": "Screenshot",
+          "icon": "/icons/screenshot.png",
+          "action": {
+            "type": "system",
+            "target": "screenshot"
+          }
+        }
+      ]
+    }
+  ]
+}
