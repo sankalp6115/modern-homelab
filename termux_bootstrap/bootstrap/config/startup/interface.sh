@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 WIFI_IP=$(ip -4 addr show wlan0 2>/dev/null | grep -oP 'inet \K[\d.]+')
 TUN_IP=$(ip -4 addr show tun0 2>/dev/null | grep -oP 'inet \K[\d.]+')
 
