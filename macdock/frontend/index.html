@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Stream Deck</title>
+    <meta name="description" content="Extensible browser-based Stream Deck controller for macOS." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="app">
+        <div class="header">
+            <div class="header-brand">
+                <div class="header-logo">SD</div>
+                <span class="header-title">Stream Deck</span>
+            </div>
+            <div class="status-dot" id="statusDot" title="Server Status"></div>
+        </div>
+        <div class="tabs" id="tabsContainer" role="tablist"></div>
+        <div class="pages-wrap" id="pagesWrap">
+            <div class="pages-track" id="pagesTrack"></div>
+        </div>
+        <div class="dots" id="dotsContainer" role="presentation"></div>
+
+    </div>
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
