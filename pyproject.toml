@@ -1,5 +1,5 @@
 [project]
-name = "modern-homelab"
+name = "homelab"
 version = "0.1.0"
 description = "Homelab"
 readme = "README.md"
@@ -8,11 +8,16 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
+    "directorymap>=0.3.2",
+    "dotenv>=0.9.9",
+    "fastapi>=0.142.2",
+    "pydantic>=2.13.5",
+    "requests>=2.34.2",
     "uvicorn>=0.53.0",
 ]
 
 [project.scripts]
-modern-homelab = "modern_homelab:main"
+homelab = "homelab:main"
 
 [build-system]
 requires = ["uv_build>=0.12.15,<0.13.0"]
