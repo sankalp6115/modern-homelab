@@ -11,8 +11,7 @@ DEST_CONTROL="$SYSTEM_SCRIPTS/control-layer"
 mkdir -p "$DEST_CONTROL"
 mkdir -p "$SYSTEM_SCRIPTS/github-backup"
 
-# ─── Add system-scripts to PATH in .bashrc (idempotent) ──────────────────────
-
+# System scripts
 BASHRC="$HOME/.bashrc"
 PATH_LINE="export PATH=\"\$HOME/system_scripts/control-layer:\$PATH\""
 
